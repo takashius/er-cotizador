@@ -30,7 +30,18 @@ class Er_Cotizador_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+		global $wpdb;
+		$nombreTabla = $wpdb->prefix . "er_cotizaciones";
 
+		$query = 'CREATE TABLE '.$nombreTabla.' ('
+		.'`ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,'
+        .'`titulo` varchar(60) NOT NULL,'
+        .'`cliente_id` bigint(20) NOT NULL,'
+        .'`comentarios` text NOT NULL,'
+        .'`factura` int NOT NULL,'
+        .'`fecha` datetime NOT NULL'
+        .');';
+		$wpdb->get_results($query);
 	}
 
 }

@@ -11,6 +11,19 @@
  * @package    Er_Cotizador
  * @subpackage Er_Cotizador/admin/partials
  */
+
+    global $wpdb;
+    $sql_clientes = "SELECT `wp_posts`.`ID`, 
+    `wp_posts`.`post_title`, 
+    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'nombre') as 'nombre', 
+    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'apellido') as 'apellido', 
+    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'cedula-rif') as 'cedula-rif'
+    FROM `wp_posts`
+    WHERE 
+        `post_type` = 'er-clientes' AND 
+        `post_status` = 'publish'
+    ORDER BY `post_title`";
+    $clientes = $wpdb->get_results($sql_clientes);
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
@@ -532,8 +545,11 @@
                 <div class="form-group">
                     <label for="select-name" class="col-form-label"><?php echo __( 'Cliente', 'er-cotizador' ); ?></label>
                     <select class="form-control select2" id="select-name" name="state">
-                        <option value="AL">Alabama</option>
-                        <option value="WY">Wyoming</option>
+                        <?php
+                        foreach($clientes as $cliente){
+                            echo '<option value="'.$cliente->ID.'">('.$cliente->post_title.') '.$cliente->nombre.' '.$cliente->apellido.'</option>';
+                        }
+                        ?>
                     </select>
                 </div>
                 <div class="form-group">
