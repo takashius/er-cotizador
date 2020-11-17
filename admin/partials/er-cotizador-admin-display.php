@@ -60,9 +60,10 @@
         <table id="listado" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Status</th>
                     <th>N°</th>
-                    <th><?php echo __( 'Nombre', 'er-cotizador' ); ?></th>
+                    <th><?php echo __( 'Cotizacion', 'er-cotizador' ); ?></th>
+                    <th><?php echo __( 'Cliente', 'er-cotizador' ); ?></th>
                     <th><?php echo __( 'RIF', 'er-cotizador' ); ?></th>
                     <th><?php echo __( 'Fecha', 'er-cotizador' ); ?></th>
                     <th><?php echo __( 'Acciones', 'er-cotizador' ); ?></th>
@@ -72,8 +73,27 @@
                 <?php
                     foreach($cotizaciones as $cotiza){?>
                 <tr>
-                    <td>Aprobada</td>
+                    <td><?php
+                        switch($cotiza->status){
+                            case 1:
+                                echo __( 'Abierta', 'er-cotizador' );
+                                break; 
+                            case 2:
+                                echo __( 'Aprobada', 'er-cotizador' );
+                                break; 
+                            case 3:
+                                echo __( 'Realizada', 'er-cotizador' );
+                                break;
+                            case 4:
+                                echo __( 'Cancelada', 'er-cotizador' );
+                                break;
+                            default:
+                                echo __( 'Abierta', 'er-cotizador' );
+                                break;
+                        }
+                    ?></td>
                     <td><?php echo $cotiza->ID ?></td>
+                    <td><?php echo $cotiza->titulo ?></td>
                     <td><?php echo $cotiza->title ?></td>
                     <td><?php echo $cotiza->cedulaRif ?></td>
                     <td><?php echo $cotiza->fecha ?></td>
@@ -93,9 +113,10 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th>Name</th>
+                    <th>Status</th>
                     <th>N°</th>
-                    <th><?php echo __( 'Nombre', 'er-cotizador' ); ?></th>
+                    <th><?php echo __( 'Cotizacion', 'er-cotizador' ); ?></th>
+                    <th><?php echo __( 'Cliente', 'er-cotizador' ); ?></th>
                     <th><?php echo __( 'RIF', 'er-cotizador' ); ?></th>
                     <th><?php echo __( 'Fecha', 'er-cotizador' ); ?></th>
                     <th><?php echo __( 'Acciones', 'er-cotizador' ); ?></th>

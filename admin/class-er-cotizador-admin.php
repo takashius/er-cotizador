@@ -70,7 +70,6 @@ class Er_Cotizador_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/er-cotizador-admin.css', array(), $this->version, 'all' );
 		wp_enqueue_style( "boostrap-min", plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), "4.5.3", 'all' );
 		wp_enqueue_style( "boostrap-grid-min", plugin_dir_url( __FILE__ ) . 'css/bootstrap-grid.min.css', array(), "4.5.3", 'all' );
@@ -93,6 +92,9 @@ class Er_Cotizador_Admin {
 		if(get_current_screen()->base == "toplevel_page_er-cotizador"){
 			wp_enqueue_script( "DataTables-min", plugin_dir_url( __FILE__ ) . 'js/datatables.min.js', array( 'jquery-min', 'bootstrap-min' ), "1.10.22", false );
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-admin.js', array( 'jquery-min' ), $this->version, false );
+		}
+		if(get_current_screen()->base == "admin_page_er-cotizador-edit"){
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-edit.js', array( 'jquery-min' ), $this->version, false );
 		}
 		wp_enqueue_script( "Select2", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery-min' ), "4.1.0", false );
 	}

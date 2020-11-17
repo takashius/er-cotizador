@@ -87,6 +87,38 @@ class Er_Cotizador_Ajax_Functions {
 			echo $e;
 		}
     
-        wp_die(); // this is required to terminate immediately and return a proper response
-    }
+        wp_die();
+	}
+	
+	function edit_cotiza() {
+        global $wpdb; 
+    
+        $id = $_POST['id'];
+        $title = $_POST['title'];
+        $cliente = $_POST['cliente'];
+		$coment = $_POST['coment'];
+		$status = $_POST['status'];
+		$factura = $_POST['factura'];
+		
+		$array = array(
+			"titulo" => $title,
+			"cliente_id" => $cliente,
+			"comentarios" => $coment,
+			"status" => $status,
+			"factura" => $factura
+		);
+
+		$where = array(
+			"ID" => $id
+		);
+    
+		try{
+			$wpdb->update( $wpdb->prefix."er_cotizaciones", $array, $where );
+			echo "ok";
+		}catch(Exception $e){
+			echo $e;
+		}
+
+		wp_die();
+	}
 }

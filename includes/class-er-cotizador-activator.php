@@ -38,7 +38,8 @@ class Er_Cotizador_Activator {
         .'`titulo` varchar(60) NOT NULL,'
         .'`cliente_id` bigint(20) NOT NULL,'
         .'`comentarios` text NOT NULL,'
-        .'`factura` int NOT NULL DEFAULT '0','
+		.'`factura` int NOT NULL DEFAULT '0','
+		.'`status` tinyint NOT NULL DEFAULT '1','
         .'`fecha` datetime NOT NULL DEFAULT now()'
         .');';
 		$wpdb->get_results($query);

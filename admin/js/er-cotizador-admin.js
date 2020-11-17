@@ -10,25 +10,25 @@ $(document).ready(function() {
 	$("#listado thead th").each( function ( i ) {
 		if(i == 0){
 			if ($(this).text() !== '') {
-				var isStatusColumn = (($(this).text() == 'Estatus') ? true : false);
-				var select = $('<select style="width: 100px;"><option>Abierta</option><option selected="selected">Aprobada</option><option>Realizada</option><option>Cancelada</option></select>')
+				var isStatusColumn = (($(this).text() == 'Status') ? true : false);
+				var select = $('<select style="width: 100px;"><option selected="selected">Abierta</option><option>Aprobada</option><option>Realizada</option><option>Cancelada</option></select>')
 					.appendTo( $(this).empty() )
 					.on( 'change', function () {
-						var val = $(this).val();
+						let val = $(this).val();
 				
 					table.column( i )
 						.search( val ? '^'+$(this).val()+'$' : val, true, false )
 						.draw();
 				} );
 				table.column( i )
-						.search( "Aprobada" )
+						.search( "Abierta" )
 						.draw();
 			}
 		}
 	} );
 
 	$('#nuevaCotizacion').on('shown.bs.modal', function () {
-		$('#recipient-name').trigger('focus')
+		$('#newCotiza_title').trigger('focus')
 	});
 	$('.select2').select2({
 		theme: "bootstrap"
