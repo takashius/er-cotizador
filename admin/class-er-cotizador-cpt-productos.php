@@ -127,9 +127,6 @@ class Er_Cotizador_Productos {
                         <span class="input-group-text">$</span>
                     </div>
                     <input type="text" class="form-control" placeholder="Precio" name="productoPrecio" value="<?php echo $precio; ?>" >
-                    <div class="input-group-append">
-                        <span class="input-group-text">.00</span>
-                    </div>
                 </div>
 			</div>
             <div class="row">

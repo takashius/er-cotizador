@@ -65,4 +65,28 @@ class Er_Cotizador_Ajax_Functions {
     
         wp_die(); // this is required to terminate immediately and return a proper response
     }
+
+    function save_cotiza() {
+        global $wpdb; 
+    
+        $title = $_POST['title'];
+        $cliente = $_POST['cliente'];
+		$coment = $_POST['coment'];
+		
+		$array = array(
+			"titulo" => $title,
+			"cliente_id" => $cliente,
+			"comentarios" => $coment
+		);
+    
+		try{
+			$wpdb->insert( $wpdb->prefix."er_cotizaciones", $array );
+			$lastid = $wpdb->insert_id;
+			echo $lastid;
+		}catch(Exception $e){
+			echo $e;
+		}
+    
+        wp_die(); // this is required to terminate immediately and return a proper response
+    }
 }

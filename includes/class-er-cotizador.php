@@ -213,6 +213,7 @@ class Er_Cotizador {
 		$ajax_functions = new Er_Cotizador_Ajax_Functions( $this->get_plugin_name(), $this->get_version() );
 		
 		$this->loader->add_action( 'wp_ajax_my_action', $ajax_functions, 'my_action' );
+		$this->loader->add_action( 'wp_ajax_save_cotiza', $ajax_functions, 'save_cotiza' );
 	}
 
 	/**
