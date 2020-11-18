@@ -36,8 +36,7 @@
 	$sql_clientes = "SELECT `wp_posts`.`ID`, 
     `wp_posts`.`post_title`, 
     (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'nombre') as 'nombre', 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'apellido') as 'apellido', 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'cedula-rif') as 'cedula-rif'
+    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'apellido') as 'apellido'
     FROM `wp_posts`
     WHERE 
         `post_type` = 'er-clientes' AND 
@@ -45,6 +44,19 @@
     ORDER BY `post_title`";
     $query_clientes = $wpdb->prepare($sql_clientes);
     $clientes = $wpdb->get_results($query_clientes);
+
+	$sql_productos = "SELECT `wp_posts`.`ID`, 
+    `wp_posts`.`post_title` as 'title', 
+    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'prodPrecio') as 'precio', 
+    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'prodVisible') as 'visible', 
+    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'prodIva') as 'iva'
+    FROM `wp_posts`
+    WHERE 
+        `post_type` = 'er-productos' AND 
+        `post_status` = 'publish'
+    ORDER BY `post_title`";
+    $query_productos = $wpdb->prepare($sql_productos);
+    $productos = $wpdb->get_results($query_productos);
 ?>
 
 
@@ -55,7 +67,7 @@
     <li class="breadcrumb-item active" aria-current="page">Editar</li>
   </ol>
 </nav>
-<div class="container">
+<div class="container" id="ivaConfig" val="12">
     <div class="card-body">
 		<div class="row">
 			<div class="col">
@@ -103,36 +115,84 @@
 				<th scope="col" width="5%"><?php echo __( 'Cantidad', 'er-cotizador' ); ?></th>
 				<th scope="col" width="15%"><?php echo __( 'Precio Unitario', 'er-cotizador' ); ?></th>
 				<th scope="col" width="5%"><?php echo __( 'Iva', 'er-cotizador' ); ?></th>
-				<th scope="col"width="15%"><?php echo __( 'Total', 'er-cotizador' ); ?></th>
+				<th scope="col" width="15%" colspan="2"><?php echo __( 'Total', 'er-cotizador' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-				<th>1</th>
-				<td>Mark</td>
-				<td>Otto</td>
-				<td>Otto</td>
-				<td>@mdo</td>
+				<tr class="clonar" style="display: none;" itemid="0">
+					<td>
+                        <span class="prodLabel" style="display:none !important;"></span> 
+                        <span class="prodSelect">
+                            <select class="general" style="width:100%;">
+								<?php foreach($productos as $producto){ ?>
+									<option id="<?php echo $producto->ID?>" itemprop="<?php echo $producto->precio?>" itemtype="<?php echo $producto->iva?>"><?php echo $producto->title?></option>
+								<?php }?>
+                            </select>
+                        </span>
+					</td>
+					<td class="center">
+                        <span class="cantProd">1</span>
+                        <input type="text" class="tableInput" style='display:none !important;'>
+					</td>
+					<td class="right">
+                        <span class="precioUnitario">0,00</span>
+                        <input type="text" class="tableInput inputPrecio" style='display:none !important;'>
+					</td>
+					<td>
+                        <div class="left" style="width: 20%; float: left;"><a href="#" class="btn-action glyphicons check btn-success btn-iva"><i></i></a></div>
+                        <div class="right ivaPrecio" style="width: 80%; float: left;">0,00</div>
+					</td>
+					<td class="right precioTotal">0,00</td>
+                    <td class="center" width="40px"><a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a></td>
 				</tr>
-				<tr>
-				<th>2</th>
-				<td>Jacob</td>
-				<td>Otto</td>
-				<td>Thornton</td>
-				<td>@fat</td>
-				</tr>
-				<tr>
-				<th>3</th>
-				<td>Larry</td>
-				<td>Otto</td>
-				<td>the Bird</td>
-				<td>@twitter</td>
-				</tr>
+                <tr class="selectable vacio" style="display: none;">
+                    <th colspan="6" class="center">La cotizacion no posee productos</th>
+                </tr>
 				<tr class="selectable">
 					<th colspan="6"><a href="" id="agregarProd" class="btn btn-primary"><?php echo __( 'Agregar Producto', 'er-cotizador' ); ?></a></th>
 				</tr>
 			</tbody>
 		</table>
+		<div class="row">
+            <div class="col">
+                <table class="table table-borderless table-condensed">
+                    <tbody>
+                        <tr><td colspan="2">&nbsp;</td></tr>
+                        <tr>
+                            <td>Porcentaje de descuento</td>
+                            <td><input type="text" name="descuento" value="" id="descuento" style="width: 50px;" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col"></div>
+            <div class="col">
+                <table class="table table-borderless table-condensed cart_total">
+                    <tbody>
+                        <tr>
+                            <td class="right">Subtotal:</td>
+                            <td class="right strong" id="subtotalPre"></td>
+                        </tr>
+                        <tr>
+                            <td class="right">Descuento:</td>
+                            <td class="right strong" id="subdesc"></td>
+                        </tr>
+                        <tr>
+                            <td class="right">IVA:</td>
+                            <td class="right strong" id="ivaPre"></td>
+                        </tr>
+                        <tr>
+                            <td class="right">Total:</td>
+                            <td class="right strong" id="totalPre"></td>
+                        </tr>
+                        <tr id="gananciaElement" style="display: none;">
+                            <td class="right">Ganancia:</td>
+                            <td class="right strong" id="gananciaPre"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 		</div>
 	</div>
 

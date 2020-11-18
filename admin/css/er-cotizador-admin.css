@@ -2,7 +2,8 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
-
+ .prodLabel, .cantProd, .precioUnitario{ width: 100%; cursor:pointer; float:left; }
+ .tableInput {color:#000 !important; padding: 0 !important; margin: 0 !important; border: 0 !important; width: 100% !important; border-radius: 0 !important; line-height: 1 !important; text-align:right !important;}
  .pre-load-web {
     width:100%;
     height:100%;
