@@ -111,10 +111,10 @@
 		<table class="table table-bordered">
 			<thead class="bg-primary text-white">
 				<tr>
-				<th scope="col" width="40%"><?php echo __( 'Producto', 'er-cotizador' ); ?></th>
-				<th scope="col" width="5%"><?php echo __( 'Cantidad', 'er-cotizador' ); ?></th>
+				<th scope="col" width="35%"><?php echo __( 'Producto', 'er-cotizador' ); ?></th>
+				<th scope="col" width="5%"><?php echo __( 'Cant', 'er-cotizador' ); ?></th>
 				<th scope="col" width="15%"><?php echo __( 'Precio Unitario', 'er-cotizador' ); ?></th>
-				<th scope="col" width="5%"><?php echo __( 'Iva', 'er-cotizador' ); ?></th>
+				<th scope="col" width="10%"><?php echo __( 'Iva', 'er-cotizador' ); ?></th>
 				<th scope="col" width="15%" colspan="2"><?php echo __( 'Total', 'er-cotizador' ); ?></th>
 				</tr>
 			</thead>
@@ -139,14 +139,18 @@
                         <input type="text" class="tableInput inputPrecio" style='display:none !important;'>
 					</td>
 					<td>
-                        <div class="left" style="width: 20%; float: left;"><a href="#" class="btn-action glyphicons check btn-success btn-iva"><i></i></a></div>
-                        <div class="right ivaPrecio" style="width: 80%; float: left;">0,00</div>
+						<div class="left" style="width: 25%; float: left;">
+							<button type="button" class="btn btn-sm btn-success float-right btn-iva"><i class="fa fa-square"></i></button>
+						</div>
+                        <div class="right ivaPrecio" style="width: 75%; float: right;">0,00</div>
 					</td>
 					<td class="right precioTotal">0,00</td>
-                    <td class="center" width="40px"><a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a></td>
+                    <td class="center">
+						<button type="button" class="btn btn-sm btn-danger float-right remove_item"><i class="fa fa-trash"></i></button>
+					</td>
 				</tr>
-                <tr class="selectable vacio" style="display: none;">
-                    <th colspan="6" class="center">La cotizacion no posee productos</th>
+                <tr class="selectable vacio" style=""><!-- display: none; -->
+                    <th colspan="6" class="center"><?php echo __( 'La cotizacion no posee productos', 'er-cotizador' ); ?></th>
                 </tr>
 				<tr class="selectable">
 					<th colspan="6"><a href="" id="agregarProd" class="btn btn-primary"><?php echo __( 'Agregar Producto', 'er-cotizador' ); ?></a></th>

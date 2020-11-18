@@ -68,11 +68,11 @@ $(document).ready(function() {
             id = parseFloat($('option:selected', this).attr('id'));
             precioTtl = precio;
             if(!iva || iva == NaN){
-                nuevo.find('.btn-iva').removeClass('check');
-                nuevo.find('.btn-iva').addClass('unchecked');
+                nuevo.find('.btn-iva').find('i').removeClass('fa-check-square');
+                nuevo.find('.btn-iva').find('i').addClass('fa-square');
             }else{
-                nuevo.find('.btn-iva').removeClass('unchecked');
-                nuevo.find('.btn-iva').addClass('check');
+                nuevo.find('.btn-iva').find('i').removeClass('fa-square');
+                nuevo.find('.btn-iva').find('i').addClass('fa-check-square');
             }
             nombre = $(this).val();
             nuevo.find('.prodSelect').attr('style',"display:none !important");
@@ -99,11 +99,11 @@ $(document).ready(function() {
             id = parseFloat($('option:selected', this).attr('id'));
             precioTtl = precio;
             if(!iva || iva == NaN){
-                $this.parent().parent().find('.btn-iva').removeClass('check');
-                $this.parent().parent().find('.btn-iva').addClass('unchecked');
+                $this.parent().parent().find('.btn-iva').find('i').removeClass('fa-check-square');
+                $this.parent().parent().find('.btn-iva').find('i').addClass('fa-square');
             }else{
-                $this.parent().parent().find('.btn-iva').removeClass('unchecked');
-                $this.parent().parent().find('.btn-iva').addClass('check');
+                $this.parent().parent().find('.btn-iva').find('i').removeClass('fa-square');
+                $this.parent().parent().find('.btn-iva').find('i').addClass('fa-check-square');
             }
             nombre = $(this).val();
             $next.attr('style',"display:none !important");
@@ -157,6 +157,28 @@ $(document).ready(function() {
         calcular_total();
     });
 
+    $('body').on('click', '.btn-iva', function(e){
+        var $icon = $(this).find('i');
+        if($icon.hasClass('fa-square')){
+            $icon.removeClass('fa-square');
+            $icon.addClass('fa-check-square');
+        }else{
+            $icon.removeClass('fa-check-square');
+            $icon.addClass('fa-square');
+        }
+        calcular_subtotal($(this).parent().parent().parent());
+        e.preventDefault();
+    });
+    
+    $('body').on('click', '.remove_item', function(){
+        var $this = $(this);
+        bootbox.confirm("&iquest;seguro que desea eliminar el producto de esta cotización?", function(result) {
+            if(result)
+                quitar_producto($this.parent().parent());
+        });
+        e.preventDefault();
+    });
+
     function calcular_subtotal(obj){
         ivaConfig = $('#ivaConfig').attr('val');
         valorIva = ivaConfig/100;
@@ -164,7 +186,7 @@ $(document).ready(function() {
         cantidad = parseInt(obj.find('.cantProd').html());
         precio = parseFloat(limpiar_numero(obj.find('.precioUnitario').html()));
         precioTotal = cantidad*precio;
-        if(obj.find(".btn-iva").hasClass('check')){
+        if(obj.find(".btn-iva").find('i').hasClass('fa-check-square')){
             iva = precioTotal*valorIva;
             precioFinal = precioTotal+iva;
         }else{
@@ -223,6 +245,39 @@ $(document).ready(function() {
         $('#ivaPre').html(number_format($iva, 2, ',', '.'));
         $('#totalPre').html(number_format($total, 2, ',', '.'));
         $('#gananciaPre').html(number_format($subtotal-$proveedor, 2, ',', '.'));
+    }
+    
+    function quitar_producto(obj){
+        obj.fadeOut('slow');
+        var datos = {
+            id: obj.attr('itemid')
+        };
+        if(obj.attr('itemid') != 0){
+            $.ajax({
+                type: "POST",
+                url: $("#urlAjax").attr('itemref'),
+                data: "data="+JSON.stringify(datos),
+                dataType: "json",
+                success: function(msj){
+                    obj.remove();
+                    if($('.elementos').length <= 0){
+                        $('.vacio').fadeIn('slow');
+                    }
+                    calcular_total();
+                    notificacion("Se ha borrado correctamente", 'success');
+                },
+                error: function(msj){ 
+                    console.log(msj);
+                    notificacion("Ocurrio un error al intentar borrar, recargue la página e intente nuevamente", 'error');
+                }
+            });
+        }else{
+            obj.remove();
+            if($('.elementos').length <= 0){
+                $('.vacio').fadeIn('slow');
+            }
+        }
+        calcular_total();
     }
 });
 

@@ -95,6 +95,7 @@ class Er_Cotizador_Admin {
 		}
 		if(get_current_screen()->base == "admin_page_er-cotizador-edit"){
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-edit.js', array( 'jquery-min' ), $this->version, false );
+			wp_enqueue_script( "bootbox", 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js', array( 'jquery-min' ), "5.4.0", 'all' );
 		}
 		wp_enqueue_script( "Select2", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery-min' ), "4.1.0", false );
 	}
