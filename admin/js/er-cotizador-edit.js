@@ -227,7 +227,7 @@ $(document).ready(function() {
                 descuento = precioTotal * ($descuento/100);
             }
             
-            if($(this).find(".btn-iva").hasClass('check')){
+            if($(this).find(".btn-iva").find('i').hasClass('fa-check-square')){
                 iva = (precioTotal-descuento)*valorIva;
                 precioFinal = (precioTotal-descuento)+iva;
             }else{
