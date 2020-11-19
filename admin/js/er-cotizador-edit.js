@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    const idCotiza = $("#idCotiza").attr('itemid');
+    const urlBase = $('#url_site').attr('item_ref');
+
     $('#editarCotizacion').on('shown.bs.modal', function () {
 		$('#newCotiza_title').trigger('focus')
     });
@@ -43,6 +46,8 @@ $(document).ready(function() {
 			});
 		}
     });
+
+    calcular_total();
 
     $('#agregarProd').on('click', function(e){
         var clonar = $('.clonar').find(".general");
@@ -156,6 +161,28 @@ $(document).ready(function() {
     $("#descuento").on('change', function(){
         calcular_total();
     });
+
+    $(".save-pdf").on('click', function(e){
+        const data = {
+            action: 'save_pdf',
+            id: idCotiza
+        };
+        $('#loader').attr('style', 'visibility: visible;');
+        
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#loader').attr('style', 'visibility: hidden;');
+            notificacion("Se generado la factura correctamente", 'success');
+            var link = document.createElement('a');
+            link.href = urlBase + '/wp-content/uploads/reporte.pdf';
+            link.download = 'factura_' + idCotiza + '.pdf';
+            link.dispatchEvent(new MouseEvent('click'));
+        }).fail(function(error) {
+            $('#loader').attr('style', 'visibility: hidden;');
+            console.log( '[ ERROR ]', error );
+            notificacion("Ocurrio un error al generar la factura, recargue la página e intente nuevamente", 'error');
+        });
+        e.preventDefault();
+    })
     
     $("body").on('click', '.guardar', function(e){
         //$('#myPleaseWait').modal('show');
@@ -320,13 +347,14 @@ $(document).ready(function() {
 
         $('#loader').attr('style', 'visibility: visible;');
         jQuery.post(ajaxurl, data, function(response) {
-            console.log('[ RESPONSE ]', response);
             $('#loader').attr('style', 'visibility: hidden;');
             $(".elementos[itemid='0']").each(function(i){
                 $(this).attr('itemid', response[i]);
             });
+            notificacion("Se ha guardado correctamente", 'success');
         }).fail(function(error) {
             console.log( '[ ERROR ]', error );
+            notificacion("Ocurrio un error al intentar guardar, recargue la página e intente nuevamente", 'error');
         });
     }
 });
@@ -364,4 +392,29 @@ function number_format(number, decimals, dec_point, thousands_sep) {
                 .join('0');
     }
     return s.join(dec);
+}
+
+function notificacion(texto, tipo){
+    tipo = (tipo)?tipo:'alert'; // alert|error|success|information|warning|primary|confirm
+    var layout = 'bottom';
+    notyfy({
+        text: texto,
+        type: tipo,
+        dismissQueue: true,
+        layout: layout,
+        timeout: 4000,
+        buttons: (tipo != 'confirm') ? false : [{
+                addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
+                    $notyfy.close();
+                    //return true;
+                }
+            },
+            {
+                addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
+                    $notyfy.close();
+                    //return false;
+                }
+            }]
+    });
+    return false;
 }

@@ -216,6 +216,7 @@ class Er_Cotizador {
 		$this->loader->add_action( 'wp_ajax_save_cotiza', $ajax_functions, 'save_cotiza' );
 		$this->loader->add_action( 'wp_ajax_edit_cotiza', $ajax_functions, 'edit_cotiza' );
 		$this->loader->add_action( 'wp_ajax_save_prods', $ajax_functions, 'save_prods' );
+		$this->loader->add_action( 'wp_ajax_save_pdf', $ajax_functions, 'save_pdf' );
 	}
 
 	/**

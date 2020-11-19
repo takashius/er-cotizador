@@ -73,7 +73,7 @@
 </div>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb" id="url_site" item_ref="<?php echo get_site_url(); ?>">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=er-cotizador">Cotizaciones</a></li>
     <li class="breadcrumb-item active" aria-current="page">Editar</li>
@@ -112,7 +112,7 @@
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Guardar y enviar', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Enviar al cliente', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Nota de Entrega', 'er-cotizador' ); ?></button>
-					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Facturar', 'er-cotizador' ); ?></button>
+					<button type="button" class="btn btn-secondary btn-lg btn-block save-pdf"><?php echo __( 'Facturar', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Facturar (Forma libre)', 'er-cotizador' ); ?></button>
 				</div>
 			</div>
@@ -203,7 +203,7 @@
 						<button type="button" class="btn btn-sm btn-danger float-right remove_item"><i class="fa fa-trash"></i></button>
 					</td>
 				</tr>
-                <tr class="selectable vacio" style=""><!-- display: none; -->
+                <tr class="selectable vacio" style="<?php if(count($cotizaProd) > 0) echo "display: none;"; ?>"><!-- display: none; -->
                     <th colspan="6" class="center"><?php echo __( 'La cotizacion no posee productos', 'er-cotizador' ); ?></th>
                 </tr>
 				<tr class="selectable">
@@ -217,8 +217,8 @@
                     <tbody>
                         <tr><td colspan="2">&nbsp;</td></tr>
                         <tr>
-                            <td>Porcentaje de descuento</td>
-                            <td><input type="text" name="descuento" value="" id="descuento" style="width: 50px;" /></td>
+                            <td><?php echo __( 'Porcentaje de descuento', 'er-cotizador' ); ?></td>
+                            <td><input type="text" name="descuento" value="<?php echo $cotiza->pordesc?>" id="descuento" style="width: 50px;" /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -228,24 +228,20 @@
                 <table class="table table-borderless table-condensed cart_total">
                     <tbody>
                         <tr>
-                            <td class="right">Subtotal:</td>
-                            <td class="right strong" id="subtotalPre"></td>
+                            <td class="right"><?php echo __( 'Subtotal:', 'er-cotizador' ); ?></td>
+                            <th class="right strong" id="subtotalPre"></th>
                         </tr>
                         <tr>
-                            <td class="right">Descuento:</td>
-                            <td class="right strong" id="subdesc"></td>
+                            <td class="right"><?php echo __( 'Descuento:', 'er-cotizador' ); ?></td>
+                            <th class="right strong" id="subdesc"></th>
                         </tr>
                         <tr>
-                            <td class="right">IVA:</td>
-                            <td class="right strong" id="ivaPre"></td>
+                            <td class="right"><?php echo __( 'IVA:', 'er-cotizador' ); ?></td>
+                            <th class="right strong" id="ivaPre"></th>
                         </tr>
                         <tr>
-                            <td class="right">Total:</td>
-                            <td class="right strong" id="totalPre"></td>
-                        </tr>
-                        <tr id="gananciaElement" style="display: none;">
-                            <td class="right">Ganancia:</td>
-                            <td class="right strong" id="gananciaPre"></td>
+                            <td class="right"><?php echo __( 'Total:', 'er-cotizador' ); ?></td>
+                            <th class="right strong" id="totalPre"></th>
                         </tr>
                     </tbody>
                 </table>
@@ -316,6 +312,6 @@
             </div>
             </div>
         </div>
-    </div>
+	</div>
 
 </div>

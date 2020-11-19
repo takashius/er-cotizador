@@ -169,4 +169,166 @@ class Er_Cotizador_Ajax_Functions {
 
 		wp_die();
 	}
+
+	function save_pdf() {
+		global $wpdb; 
+		$id = $_POST['id'];
+		$ivaVal = 12;
+	
+		$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
+		$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
+		$tablaPosts = $wpdb->prefix . "posts";
+		$tablaPostMeta = $wpdb->prefix . "postmeta";
+
+		$sql = "SELECT 
+			`".$tablaCotiza."`.*, 
+			`".$tablaPosts."`.`post_title`, 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'nombre') as 'nombre', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'apellido') as 'apellido', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'cedula-rif') as 'cedulaRif', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'correo') as 'correo', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'telefono') as 'telefono', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'ciudad') as 'ciudad', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'direccion') as 'direccion', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'direccion-cont') as 'direccionCont'
+		FROM 
+			`".$tablaCotiza."`, `".$tablaPosts."` 
+		WHERE `".$tablaCotiza."`.`ID` = '$id' 
+			AND `".$tablaCotiza."`.`cliente_id` = `".$tablaPosts."`.`ID`";
+		$query = $wpdb->prepare($sql); 
+		$cotizacion = $wpdb->get_results($query);
+		$cotiza = $cotizacion[0];
+		$newDate = date("Y-m-d", strtotime($cotiza->fecha));
+	
+		$sql_cotizaProd = "SELECT * FROM `".$tablaCotizaProd."` WHERE `id_cotiza` = '".$id."'";
+		$query_cotizaProd = $wpdb->prepare($sql_cotizaProd);
+		$cotizaProd = $wpdb->get_results($query_cotizaProd);
+
+		include_once( plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-er-cotizador-factura.php');
+
+		$pdf = new Factura();
+		$pdf->setTipoFactura(1);
+		$pdf->setCabecera(true);
+		$pdf->AddPage();
+		$pdf->fiscal($cotiza->factura);
+		$pdf->SetFont('Arial','',8);
+		
+		$pdf->RoundedRect(11, 52, 123, 25, 3, ''); //Informacion del cliente
+		$pdf->SetXY(13, 53); $pdf->Cell(60,5,utf8_decode('Nombre o Razón Social:  '.$cotiza->nombre));
+		$pdf->Line(11, 58.2, 134, 58.2);
+		$pdf->SetXY(13, 59); $pdf->Cell(60,5,'RIF: '.$cotiza->cedulaRif);
+		$pdf->Line(11, 64.4, 134, 64.4);
+		$pdf->Line(60, 58.2, 60, 64.4); //linea vertical rif-lugar
+		$pdf->SetXY(60, 59); $pdf->Cell(60,5,utf8_decode('Lugar y Fecha de Emisión: '.$newDate));
+		$pdf->Line(11, 70.6, 134, 70.6);
+		$pdf->SetXY(13, 65); $pdf->Cell(60,5,utf8_decode('Dirección Fiscal: '.$cotiza->direccion));
+		$pdf->SetXY(13, 71); $pdf->Cell(60,5,$cotiza->direccionCont); //linea 2 de la direccion
+		$pdf->Line(75, 70.6, 75, 77);//linea vertical fecha-telefono
+		$pdf->SetXY(76, 71); $pdf->Cell(60,5,utf8_decode('Teléfono: '.$cotiza->telefono));
+		
+		$pdf->RoundedRect(138, 52, 60, 25, 3, '');//Cod Cliente - Forma de pago
+		$pdf->SetXY(140, 55); $pdf->Cell(60,5,utf8_decode('Código de Cliente: '.$cotiza->cliente_id));
+		$pdf->Line(138, 64.4, 198, 64.4);
+		$pdf->SetXY(140, 68); $pdf->Cell(60,5,'Forma de Pago: Contado');
+		
+		$pdf->RoundedRect(11, 80, 187, 160, 3, '');
+		$pdf->Line(11, 87, 198, 87);
+		$pdf->SetFont('Arial','B',8);
+		$pdf->SetXY(15, 81); $pdf->Cell(60,5,'CANTIDAD');
+		$pdf->Line(35, 80, 35, 240);
+		$pdf->SetXY(35, 81); $pdf->Cell(105,5,utf8_decode('CONCEPTO O DESCRIPCIÓN'),0,0,'C');
+		$pdf->Line(140, 80, 140, 240);
+		$pdf->SetFont('Arial','B',7);
+		$pdf->SetXY(140, 81); $pdf->Cell(29,5,utf8_decode('PRECIO UNITARIO $'),0,0,'C');
+		$pdf->SetXY(169, 81); $pdf->Cell(29,5,utf8_decode('TOTAL $'),0,0,'C');
+
+		if($cotiza->pordesc > 0){
+            $pdf->Line(169, 80, 169, 264);
+            $pdf->Line(198, 85, 198, 264);
+            $pdf->Line(120, 252, 198, 252);
+            $pdf->Line(120, 258, 198, 258);
+            $pdf->Line(169, 264, 198, 264);
+            $pdf->Line(120, 252, 120, 258);
+        }else{
+            $pdf->Line(169, 80, 169, 258);
+            $pdf->Line(198, 85, 198, 258);
+            $pdf->Line(120, 246, 198, 246);
+            $pdf->Line(120, 252, 198, 252);
+            $pdf->Line(169, 258, 198, 258);
+            $pdf->Line(120, 246, 120, 252);
+		}
+		$pdf->SetXY(10, 85);
+		$pdf->Cell(60,7,'',0,1,'L');
+		$pdf->SetFont('Arial','',8);
+        $subtotal = 0;
+        $baseImponible = 0;
+        $ivaItem = 0;
+        $interlineado = 3;
+        $mondesc = 0;
+		foreach($cotizaProd as $c=>$v){
+			$precio = $v->precio;
+	    
+			$pdf->Cell(5, 0);
+			$pdf->Cell(20, 0, $v->cantidad, 0, 0, "C"); // CANTIDAD
+			$pdf->Cell(4, 0);
+			$puntos = "";
+			if(strlen($v->titulo) >= 65){
+				$puntos = "...";
+			}
+			$pdf->Cell(99, 0, substr(utf8_decode($v->titulo), 0, 65).$puntos); // CONCEPTO
+			$pdf->Cell(5, 0);
+			$pdf->Cell(25, 0, number_format($precio, 2, ',', '.'), 0, 0, "R"); // PRECIO
+			$pdf->Cell(2, 0);
+			$pdf->Cell(25, 0, number_format($v->cantidad*$precio, 2, ',', '.'), 0, 0, "R"); // TOTAL
+			$pdf->Ln($interlineado);
+			$subtotal += $v->cantidad*$precio;
+			$descuento = 0;
+			if($cotiza->pordesc > 0){
+				$descuento = ($v->cantidad*$precio) * ($cotiza->pordesc/100);
+			}
+			$valorTmp = ($v->cantidad*$precio) - $descuento;
+			if($v->iva){
+				$ivaItem += $valorTmp*($ivaVal/100);
+				$baseImponible += $valorTmp;
+			}
+			$mondesc += $descuento;
+		}
+		if($cotiza->factura > 0 && !$nota){
+			$pdf->SetFont('Arial','',8);
+			$pdf->SetXY(13, 265); $pdf->Cell(29,5,utf8_decode('ESTA FACTURA VA SIN TACHADURA NI ENMIENDAS'),0,0,'l');
+			$pdf->SetFont('Arial','B',10);
+			$pdf->SetXY(13, 270); $pdf->Cell(29,5,utf8_decode('ORIGINAL'),0,0,'L');
+		}
+
+		$pdf->SetFont('Arial','',8);
+		$pdf->Line(30, 250, 80, 250);
+		$pdf->SetXY(30, 250); $pdf->Cell(50,5,utf8_decode('RECIBIDO POR'),0,0,'C');
+		
+		$totaltotal = $subtotal - $mondesc + $ivaItem;
+
+		if($cotiza->pordesc > 0){
+			$pdf->SetXY(140, 241); $pdf->Cell(28,5,'SUB-TOTAL $',0,0,'R');
+			$pdf->SetXY(169, 241); $pdf->Cell(28,5,number_format($subtotal, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(120, 247); $pdf->Cell(49,5,'DESCUENTO ('.$cotiza->pordesc.'%)',0,0,'R');
+			$pdf->SetXY(169, 247); $pdf->Cell(28,5,number_format($mondesc, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(120, 253); $pdf->Cell(49,5,'I.V.A. '.$ivaVal.'%  SOBRE $ '.number_format($baseImponible, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(169, 253); $pdf->Cell(28,5,number_format($ivaItem, 2, ',', '.'),0,0,'R');
+			$pdf->SetFont('Arial','b',8);
+			$pdf->SetXY(130, 259); $pdf->Cell(39,5,'TOTAL A PAGAR $',0,0,'R');
+			$pdf->SetXY(169, 259); $pdf->Cell(28,5,number_format($totaltotal, 2, ',', '.'),0,0,'R');
+		}else{
+			$pdf->SetXY(140, 241); $pdf->Cell(28,5,'SUB-TOTAL $',0,0,'R');
+			$pdf->SetXY(169, 241); $pdf->Cell(28,5,number_format($subtotal, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(120, 247); $pdf->Cell(49,5,'I.V.A. '.$ivaVal.'%  SOBRE $ '.number_format($baseImponible, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(169, 247); $pdf->Cell(28,5,number_format($ivaItem, 2, ',', '.'),0,0,'R');
+			$pdf->SetFont('Arial','b',8);
+			$pdf->SetXY(130, 253); $pdf->Cell(39,5,'TOTAL A PAGAR $',0,0,'R');
+			$pdf->SetXY(169, 253); $pdf->Cell(28,5,number_format($totaltotal, 2, ',', '.'),0,0,'R');
+		}
+
+        $pdf->Output("I", "reporte.pdf");
+
+		header("Content-type:application/pdf");
+		$pdf->Output('F', '../wp-content/uploads/reporte.pdf');
+	}
 }

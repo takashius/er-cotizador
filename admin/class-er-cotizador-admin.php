@@ -77,6 +77,10 @@ class Er_Cotizador_Admin {
 		if(get_current_screen()->base == "toplevel_page_er-cotizador"){
 			wp_enqueue_style( "DataTables-min", plugin_dir_url( __FILE__ ) . 'css/datatables.min.css', array('boostrap-min'), "1.10.22", 'all' );
 		}
+		if(get_current_screen()->base == "admin_page_er-cotizador-edit"){
+			wp_enqueue_style( "jquery.notyfy", plugin_dir_url( __FILE__ ) . 'css/jquery.notyfy.css', array(), $this->version, 'all' );
+			wp_enqueue_style( "jquery.notyfy-themes", plugin_dir_url( __FILE__ ) . 'css/jquery.notyfy-themes.default.css', array(), $this->version, 'all' );
+		}
 		wp_enqueue_style( "Select2", plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), "4.1.0", 'all' );
 		wp_enqueue_style( "select2-bootstrap-theme", plugin_dir_url( __FILE__ ) . 'css/select2-bootstrap.min.css', array(), "0.1.0", 'all' );
 	}
@@ -94,7 +98,8 @@ class Er_Cotizador_Admin {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-admin.js', array( 'jquery-min' ), $this->version, false );
 		}
 		if(get_current_screen()->base == "admin_page_er-cotizador-edit"){
-			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-edit.js', array( 'jquery-min' ), $this->version, false );
+			wp_enqueue_script( "jquery.notyfy", plugin_dir_url( __FILE__ ) . 'js/jquery.notyfy.js', array( 'jquery-min' ), $this->version, false );
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-edit.js', array( 'jquery-min', 'jquery.notyfy' ), $this->version, false );
 			wp_enqueue_script( "bootbox", 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js', array( 'jquery-min' ), "5.4.0", 'all' );
 		}
 		wp_enqueue_script( "Select2", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery-min' ), "4.1.0", false );
@@ -141,6 +146,14 @@ class Er_Cotizador_Admin {
 			'er-cotizador-edit', 
 			array( $this, 'edit_page' )
 		);
+		add_submenu_page(
+			'edit.php?post_type=er-clientes',
+			__( 'Editar Cotizacion', 'er-cotizador' ), 
+			__( 'Editar Cotizacion', 'er-cotizador' ), 
+			"manage_options", 
+			'er-cotizador-pdf', 
+			array( $this, 'show_pdf' )
+		);
 
 	}
 
@@ -163,6 +176,16 @@ class Er_Cotizador_Admin {
 	public function edit_page() {
 
 		include_once( 'partials/er-cotizador-admin-edit.php' );
+
+	}
+
+	/**
+	 * Register the Menu for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function show_pdf() {
+		include_once( 'partials/er-cotizador-admin-factura.php' );
 
 	}
 
