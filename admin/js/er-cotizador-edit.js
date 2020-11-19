@@ -1,6 +1,7 @@
 $(document).ready(function() {
     const idCotiza = $("#idCotiza").attr('itemid');
     const urlBase = $('#url_site').attr('item_ref');
+    const ivaConfig = $('#ivaConfig').attr('val');
 
     $('#editarCotizacion').on('shown.bs.modal', function () {
 		$('#newCotiza_title').trigger('focus')
@@ -176,6 +177,7 @@ $(document).ready(function() {
             link.href = urlBase + '/wp-content/uploads/reporte.pdf';
             link.download = 'factura_' + idCotiza + '.pdf';
             link.dispatchEvent(new MouseEvent('click'));
+            console.log(response);
         }).fail(function(error) {
             $('#loader').attr('style', 'visibility: hidden;');
             console.log( '[ ERROR ]', error );
@@ -213,7 +215,6 @@ $(document).ready(function() {
     });
 
     function calcular_subtotal(obj){
-        ivaConfig = $('#ivaConfig').attr('val');
         valorIva = ivaConfig/100;
         id = obj.attr('itemid');
         cantidad = parseInt(obj.find('.cantProd').html());
@@ -240,7 +241,6 @@ $(document).ready(function() {
 		var calcBsS = $("#tipoMoneda").attr('rel');
 		var tasa = parseInt($("#tasaActual").attr('rel'));
         var $descuento = parseInt($('#descuento').val());
-        ivaConfig = $('#ivaConfig').attr('val');
         valorIva = ivaConfig/100;
         
         $('.elementos').each(function(){

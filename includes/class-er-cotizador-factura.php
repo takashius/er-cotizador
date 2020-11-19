@@ -18,6 +18,7 @@
     class Factura extends FPDF {
         private $cabecera;
         private $tipoFactura = 0;
+        private $options;
         
         function RoundedRect($x, $y, $w, $h, $r, $style = '')
         {
@@ -54,6 +55,10 @@
         public function setCabecera($cabecera){
             $this->cabecera = $cabecera;
         }
+
+        public function setOptions($options){
+            $this->options = $options;
+        }
         
         public function setTipoFactura($tipoFactura){
             $this->tipoFactura = $tipoFactura;
@@ -69,43 +74,23 @@
         function Header()
         {
             if($this->cabecera){
-                if($this->tipoFactura == 0){
-                    // Logo
-                    //$this->Image($this->getDir().'images/logo.jpg',10,8,33);
-                    // Marca de Agua
-                    $this->SetAlpha(0.2);
-                    //$this->Image($this->getDir().'images/logo_grande.png',40,140,110);
-                    $this->SetAlpha(1);
-                    // Arial bold 15
-                    $this->SetFont('times','B',12);
-                    $this->Ln(12);
-                    $this->SetX(10);
-                    // Titulo
-                    $this->Cell(140,6,'MILAGROS LORANGEL DE LOS SANTOS PALACIOS',0,1,'L');
-                    $this->SetFont('times','',8);
-                    $this->Cell(140,3,'AV. PPAL BOLEITA NORTE',0,1,'L');
-                    $this->Cell(140,3,'CASA NRO 11-68 BARRIO LA LUCHA',0,1,'L');
-                    $this->SetFont('times','B',8);
-                    $this->Cell(140,4,'04263150843',0,1,'L');
-                }else if($this->tipoFactura == 1){
-                    // Logo
-                    //$this->Image($this->getDir().'images/logo_erdesarrollo_verde_grande.png',10,8,33);
-                    // Marca de Agua
-                    $this->SetAlpha(0.2);
-                    //$this->Image($this->getDir().'images/logo_erdesarrollo_verde_grande.png',40,140,110);
-                    $this->SetAlpha(1);
-                    // Arial bold 15
-                    $this->SetFont('times','B',12);
-                    $this->Ln(12);
-                    $this->SetX(10);
-                    // Titulo
-                    $this->Cell(140,6,'Erick Desarrollador Web, C.A.',0,1,'L');
-                    $this->SetFont('times','',8);
-                    $this->Cell(140,3,'EL LLANITO, MIRADOR DEL ESTE',0,1,'L');
-                    $this->Cell(140,3,'CALLE SUCRE, CASA NRO 34',0,1,'L');
-                    $this->SetFont('times','B',8);
-                    $this->Cell(140,4,'0414-3168556',0,1,'L');
-                }
+                // Logo
+                //$this->Image($this->getDir().'images/logo_erdesarrollo_verde_grande.png',10,8,33);
+                // Marca de Agua
+                $this->SetAlpha(0.2);
+                //$this->Image($this->getDir().'images/logo_erdesarrollo_verde_grande.png',40,140,110);
+                $this->SetAlpha(1);
+                // Arial bold 15
+                $this->SetFont('times','B',12);
+                $this->Ln(12);
+                $this->SetX(10);
+                // Titulo
+                $this->Cell(140,6, $this->options['er_name'],0,1,'L');
+                $this->SetFont('times','',8);
+                $this->Cell(140,3,$this->options['er_dir_ln_1'],0,1,'L');
+                $this->Cell(140,3,$this->options['er_dir_ln_2'],0,1,'L');
+                $this->SetFont('times','B',8);
+                $this->Cell(140,4,$this->options['er_tel'],0,1,'L');
                 // Salto de linea
                 $this->Ln(20);
             }
@@ -116,11 +101,7 @@
             $this->SetXY(140, 30);
             $this->Cell(60,7,'PRESUPUESTO',0,1,'L');
             $this->SetX(140);
-            if($this->tipoFactura == 0){
-                $this->Cell(60,7,'RIF  V-16433517-4',0,1,'L');
-            }else if($this->tipoFactura == 1){
-                $this->Cell(60,7,'RIF  V-16134236-6',0,1,'L');
-            }
+            $this->Cell(60,7, __( 'RIF ', 'er-cotizador' ).$this->options['er_rif'],0,1,'L');
             $this->SetFont('Arial','',8);
         }
             
@@ -129,11 +110,7 @@
             $this->SetXY(140, 30);
             $this->Cell(60,7,'PRESUPUESTO',0,1,'L');
             $this->SetX(140);
-            if($this->tipoFactura == 0){
-                $this->Cell(60,7,'RIF  V-16433517-4',0,1,'L');
-            }else if($this->tipoFactura == 1){
-                $this->Cell(60,7,'RIF  V-16134236-6',0,1,'L');
-            }
+            $this->Cell(60,7,__( 'RIF ', 'er-cotizador' ).$this->options['er_rif'],0,1,'L');
             
             $this->SetFont('Arial','',8);
         }
@@ -143,11 +120,7 @@
             $this->SetXY(140, 17);
             $this->SetFont('Arial','',8);
             $this->Cell(35,5,' ');
-            if($this->tipoFactura == 0){
-                $this->Cell(60,5,'RIF  V-16433517-4',0,1,'L');
-            }else if($this->tipoFactura == 1){
-                $this->Cell(60,5,'RIF  V-16134236-6',0,1,'L');
-            }
+            $this->Cell(60,5, __( 'RIF ', 'er-cotizador' ).$this->options['er_rif'],0,1,'L');
             $this->SetFont('ARIAL','',9);
             $this->SetXY(130, 22);
             $this->Cell(60,7,'FACTURA  '.str_pad($numero, 8, "0", STR_PAD_LEFT),0,1,'L');

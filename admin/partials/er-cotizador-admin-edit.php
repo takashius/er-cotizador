@@ -14,6 +14,8 @@
 
 	global $wpdb;
 	$id = $_GET['id'];
+	$options = get_option( 'er_settings' );
+	$ivaVal = $options['er_iva'];
 	
 	$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
 	$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
@@ -80,7 +82,7 @@
   </ol>
 </nav>
 <div class="container" id="idCotiza" itemid="<?php echo $cotiza->ID ?>">
-    <div class="card-body" id="ivaConfig" val="12">
+    <div class="card-body" id="ivaConfig" val="<?php echo $ivaVal?>">
 		<div class="row">
 			<div class="col">
 				<h1><?php echo __( 'Editar cotizacion', 'er-cotizador' ); ?></h1>
@@ -133,7 +135,6 @@
 			<tbody>
 			<?php foreach($cotizaProd as $item){
 				$precioTtl = $item->precio * $item->cantidad;
-				$ivaVal = 12;
 				if($item->iva == 1){
 					$iva = $precioTtl*($ivaVal/100);
 					$precioFinal = $precioTtl + $iva;

@@ -173,7 +173,8 @@ class Er_Cotizador_Ajax_Functions {
 	function save_pdf() {
 		global $wpdb; 
 		$id = $_POST['id'];
-		$ivaVal = 12;
+		$options = get_option( 'er_settings' );
+		$ivaVal = $options['er_iva'];
 	
 		$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
 		$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
@@ -207,7 +208,7 @@ class Er_Cotizador_Ajax_Functions {
 		include_once( plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-er-cotizador-factura.php');
 
 		$pdf = new Factura();
-		$pdf->setTipoFactura(1);
+		$pdf->setOptions($options);
 		$pdf->setCabecera(true);
 		$pdf->AddPage();
 		$pdf->fiscal($cotiza->factura);

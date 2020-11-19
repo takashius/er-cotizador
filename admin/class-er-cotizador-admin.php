@@ -154,7 +154,189 @@ class Er_Cotizador_Admin {
 			'er-cotizador-pdf', 
 			array( $this, 'show_pdf' )
 		);
+		add_options_page( 
+			'Cotizador', 
+			'Cotizador', 
+			'manage_options', 
+			'er-cotizador-options', 
+			array( $this, 'er_options_page' ) );
+	}
 
+	function er_settings_init(  ) { 
+
+		register_setting( 'erCotizador', 'er_settings' );
+	
+		add_settings_section(
+			'er_erCotizador_section', 
+			__( 'Configuracion de plugin', 'er-cotizador' ), 
+			array( $this, 'er_settings_section_callback' ), 
+			'erCotizador'
+		);
+	
+		add_settings_section(
+			'er_erCotizador_money_section', 
+			__( 'Asuntos financieros', 'er-cotizador' ), 
+			array( $this, 'er_settings_money_section_callback' ), 
+			'erCotizador'
+		);
+	
+		add_settings_field( 
+			'er_name', 
+			__( 'Nombre de la empresa', 'er-cotizador' ), 
+			array( $this, 'er_name_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_rif', 
+			__( 'RIF de la empresa', 'er-cotizador' ), 
+			array( $this, 'er_rif_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_dir_ln_1', 
+			__( 'Direccion', 'er-cotizador' ), 
+			array( $this, 'er_dir_ln_1_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_dir_ln_2', 
+			__( 'Direccion (Ln 2)', 'er-cotizador' ), 
+			array( $this, 'er_dir_ln_2_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_tel', 
+			__( 'Telefono', 'er-cotizador' ), 
+			array( $this, 'er_tel_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_mail', 
+			__( 'Correo', 'er-cotizador' ), 
+			array( $this, 'er_mail_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_iva', 
+			__( 'Impuesto al Valor Agregado (IVA)', 'er-cotizador' ), 
+			array( $this, 'er_iva_render' ), 
+			'erCotizador', 
+			'er_erCotizador_money_section' 
+		);
+	}
+
+	function er_name_render(  ) { 
+
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' name='er_settings[er_name]' value='<?php echo $options['er_name']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_rif_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' name='er_settings[er_rif]' value='<?php echo $options['er_rif']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_dir_ln_1_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' name='er_settings[er_dir_ln_1]' value='<?php echo $options['er_dir_ln_1']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_dir_ln_2_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' name='er_settings[er_dir_ln_2]' value='<?php echo $options['er_dir_ln_2']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_tel_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' name='er_settings[er_tel]' value='<?php echo $options['er_tel']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_mail_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' name='er_settings[er_mail]' value='<?php echo $options['er_mail']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_iva_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' name='er_settings[er_iva]' value='<?php echo $options['er_iva']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_settings_section_callback(  ) { 
+	
+		echo __( 'Configura parametros de tu empresa para las facturas y cotizaciones', 'er-cotizador' );
+	
+	}
+	
+	
+	function er_settings_money_section_callback(  ) { 
+	
+		echo __( 'Configura parametros relacionados a la moneda y calculos', 'er-cotizador' );
+	
+	}
+	
+	
+	function er_options_page(  ) { 
+	
+			?>
+			<form action='options.php' method='post'>
+	
+				<h2><?php echo __( 'Er-Cotizador', 'er-cotizador' ) ?></h2>
+	
+				<?php
+				settings_fields( 'erCotizador' );
+				do_settings_sections( 'erCotizador' );
+				submit_button();
+				?>
+	
+			</form>
+			<?php
+	
 	}
 
 	/**
@@ -176,16 +358,6 @@ class Er_Cotizador_Admin {
 	public function edit_page() {
 
 		include_once( 'partials/er-cotizador-admin-edit.php' );
-
-	}
-
-	/**
-	 * Register the Menu for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function show_pdf() {
-		include_once( 'partials/er-cotizador-admin-factura.php' );
 
 	}
 
