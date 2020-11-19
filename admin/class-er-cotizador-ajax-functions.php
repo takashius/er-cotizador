@@ -121,4 +121,52 @@ class Er_Cotizador_Ajax_Functions {
 
 		wp_die();
 	}
+	
+	function save_prods() {
+		global $wpdb; 
+		$cotizacion = $_POST['cotizacion'];
+		$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
+		$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
+		$id_cotiza = $cotizacion['id'];
+		$ides = array();
+
+		try{
+			$data = array(
+				'total' => $cotizacion['total'],
+				'pordesc' => $cotizacion['pordesc'],
+				'montdesc' => $cotizacion['ttldesc']
+			);
+			$where = array(
+				"ID" => $cotizacion['id']
+			);
+			$wpdb->update( $tablaCotiza, $data, $where );
+
+			foreach($cotizacion['elementos'] as $item){
+				$data = array(
+					'id_prod' => $item['prod'],
+					'id_cotiza' => $item['cotiza'],
+					'titulo' => $item['nombre'],
+					'precio' => $item['precio'],
+					'cantidad' => $item['cantidad'],
+					'iva' => $item['iva']
+				);
+				if($item['id'] != 0){
+					$where = array(
+						"ID" => $item['id']
+					);
+					$wpdb->update( $tablaCotizaProd, $data, $where );
+				}else{
+					$wpdb->insert( $tablaCotizaProd, $data );
+					$lastid = $wpdb->insert_id;
+                    $ides[] = $lastid;
+				}
+			}
+			wp_send_json($ides);
+
+		}catch(Exception $e){
+			echo $e;
+		}
+
+		wp_die();
+	}
 }

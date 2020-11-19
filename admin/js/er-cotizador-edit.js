@@ -24,7 +24,7 @@ $(document).ready(function() {
 			coment: coment,
 			status: status,
 			factura: factura
-		}; console.log('[DATA]', data);
+		};
 		if(title === null){
 			$('#cotiza_title_error').fadeIn();
 			error = true;
@@ -156,6 +156,12 @@ $(document).ready(function() {
     $("#descuento").on('change', function(){
         calcular_total();
     });
+    
+    $("body").on('click', '.guardar', function(e){
+        //$('#myPleaseWait').modal('show');
+        guardar(false);
+        e.preventDefault();
+    });
 
     $('body').on('click', '.btn-iva', function(e){
         var $icon = $(this).find('i');
@@ -278,6 +284,50 @@ $(document).ready(function() {
             }
         }
         calcular_total();
+    }
+    
+    function guardar(send){
+        const enviar = (send)?true:false;
+        let elementos = new Array();
+        $('.elementos').each(function(a){
+            if($(this).find(".btn-iva").find('i').hasClass('fa-check-square')){
+                iva = 1;
+            }else{
+                iva = 0;
+            }
+            item = {
+                id: $(this).attr('itemid'),
+                cotiza: $("#idCotiza").attr('itemid'),
+                nombre: $(this).find('.prodLabel').html(),
+                prod: $(this).find('.prodLabel').attr('itemid'),
+                cantidad: parseInt($(this).find('.cantProd').html()),
+                precio: parseFloat(limpiar_numero($(this).find('.precioUnitario').html())),
+                iva: iva
+            };
+            elementos.push(item);
+        });
+        cotizacion = {
+            elementos : elementos,
+            id: $("#idCotiza").attr('itemid'),
+            total: limpiar_numero($("#totalPre").html()),
+            pordesc: parseInt($('#descuento').val()),
+            ttldesc: limpiar_numero($("#subdesc").html())
+        };
+        const data = {
+			action: 'save_prods',
+			cotizacion: cotizacion
+		};
+
+        $('#loader').attr('style', 'visibility: visible;');
+        jQuery.post(ajaxurl, data, function(response) {
+            console.log('[ RESPONSE ]', response);
+            $('#loader').attr('style', 'visibility: hidden;');
+            $(".elementos[itemid='0']").each(function(i){
+                $(this).attr('itemid', response[i]);
+            });
+        }).fail(function(error) {
+            console.log( '[ ERROR ]', error );
+        });
     }
 });
 

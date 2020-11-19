@@ -31,16 +31,31 @@ class Er_Cotizador_Activator {
 	 */
 	public static function activate() {
 		global $wpdb;
-		$nombreTabla = $wpdb->prefix . "er_cotizaciones";
+		$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
+		$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
 
-		$query = 'CREATE TABLE '.$nombreTabla.' ('
+		$query = 'CREATE TABLE '.$tablaCotiza.' ('
 		.'`ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,'
         .'`titulo` varchar(60) NOT NULL,'
         .'`cliente_id` bigint(20) NOT NULL,'
         .'`comentarios` text NOT NULL,'
-		.'`factura` int NOT NULL DEFAULT '0','
-		.'`status` tinyint NOT NULL DEFAULT '1','
+		.'`factura` int NOT NULL DEFAULT 0,'
+		.'`status` tinyint NOT NULL DEFAULT 1,'
+		.'`total` double NULL AFTER `status`,'
+		.'`pordesc` int NULL AFTER `total`,'
+		.'`montdesc` double NULL AFTER `pordesc`,'
         .'`fecha` datetime NOT NULL DEFAULT now()'
+        .');';
+		$wpdb->get_results($query);
+
+		$query = 'CREATE TABLE '.$tablaCotizaProd.' ('
+		.'`ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,'
+        .'`id_prod` bigint(20) NOT NULL,'
+        .'`id_cotiza` bigint(20) NOT NULL,'
+        .'`titulo` varchar(60) NOT NULL,'
+		.'`precio` float(12,2) NOT NULL,'
+		.'`cantidad` int NOT NULL,'
+        .'`iva` smallint NOT NULL'
         .');';
 		$wpdb->get_results($query);
 	}

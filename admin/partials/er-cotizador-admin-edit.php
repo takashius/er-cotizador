@@ -14,30 +14,36 @@
 
 	global $wpdb;
 	$id = $_GET['id'];
+	
+	$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
+	$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
+	$tablaPosts = $wpdb->prefix . "posts";
+	$tablaPostMeta = $wpdb->prefix . "postmeta";
+
 	$sql = "SELECT 
-		`wp_er_cotizaciones`.*, 
-		`wp_posts`.`post_title`, 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'nombre') as 'nombre', 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'apellido') as 'apellido', 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'cedula-rif') as 'cedulaRif', 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'correo') as 'correo', 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'telefono') as 'telefono', 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'ciudad') as 'ciudad', 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'direccion') as 'direccion', 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'direccion-cont') as 'direccionCont'
+		`".$tablaCotiza."`.*, 
+		`".$tablaPosts."`.`post_title`, 
+		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'nombre') as 'nombre', 
+		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'apellido') as 'apellido', 
+		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'cedula-rif') as 'cedulaRif', 
+		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'correo') as 'correo', 
+		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'telefono') as 'telefono', 
+		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'ciudad') as 'ciudad', 
+		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'direccion') as 'direccion', 
+		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'direccion-cont') as 'direccionCont'
 	FROM 
-		`wp_er_cotizaciones`, `wp_posts` 
-	WHERE `wp_er_cotizaciones`.`ID` = '$id' 
-		AND `wp_er_cotizaciones`.`cliente_id` = `wp_posts`.`ID`";
+		`".$tablaCotiza."`, `".$tablaPosts."` 
+	WHERE `".$tablaCotiza."`.`ID` = '$id' 
+		AND `".$tablaCotiza."`.`cliente_id` = `".$tablaPosts."`.`ID`";
 	$query = $wpdb->prepare($sql); 
 	$cotizacion = $wpdb->get_results($query);
 	$cotiza = $cotizacion[0];
 
-	$sql_clientes = "SELECT `wp_posts`.`ID`, 
-    `wp_posts`.`post_title`, 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'nombre') as 'nombre', 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'apellido') as 'apellido'
-    FROM `wp_posts`
+	$sql_clientes = "SELECT `".$tablaPosts."`.`ID`, 
+    `".$tablaPosts."`.`post_title`, 
+    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'nombre') as 'nombre', 
+    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'apellido') as 'apellido'
+    FROM `".$tablaPosts."`
     WHERE 
         `post_type` = 'er-clientes' AND 
         `post_status` = 'publish'
@@ -45,20 +51,26 @@
     $query_clientes = $wpdb->prepare($sql_clientes);
     $clientes = $wpdb->get_results($query_clientes);
 
-	$sql_productos = "SELECT `wp_posts`.`ID`, 
-    `wp_posts`.`post_title` as 'title', 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'prodPrecio') as 'precio', 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'prodVisible') as 'visible', 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'prodIva') as 'iva'
-    FROM `wp_posts`
+	$sql_productos = "SELECT `".$tablaPosts."`.`ID`, 
+    `".$tablaPosts."`.`post_title` as 'title', 
+    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'prodPrecio') as 'precio', 
+    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'prodVisible') as 'visible', 
+    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'prodIva') as 'iva'
+    FROM `".$tablaPosts."`
     WHERE 
         `post_type` = 'er-productos' AND 
         `post_status` = 'publish'
     ORDER BY `post_title`";
     $query_productos = $wpdb->prepare($sql_productos);
-    $productos = $wpdb->get_results($query_productos);
+	$productos = $wpdb->get_results($query_productos);
+	
+	$sql_cotizaProd = "SELECT * FROM `".$tablaCotizaProd."` WHERE `id_cotiza` = '".$id."'";
+    $query_cotizaProd = $wpdb->prepare($sql_cotizaProd);
+	$cotizaProd = $wpdb->get_results($query_cotizaProd);
 ?>
-
+<div id="loader" class="pre-load-web">
+	<div class="imagen-load"><div class="preloader"></div> <?php echo __( 'Cargando...', 'er-cotizador' ); ?></div>
+</div>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <nav aria-label="breadcrumb">
@@ -67,8 +79,8 @@
     <li class="breadcrumb-item active" aria-current="page">Editar</li>
   </ol>
 </nav>
-<div class="container" id="ivaConfig" val="12">
-    <div class="card-body">
+<div class="container" id="idCotiza" itemid="<?php echo $cotiza->ID ?>">
+    <div class="card-body" id="ivaConfig" val="12">
 		<div class="row">
 			<div class="col">
 				<h1><?php echo __( 'Editar cotizacion', 'er-cotizador' ); ?></h1>
@@ -96,7 +108,7 @@
 		<div class="col">
 			<div>
 				<div class="card">
-					<button type="button" class="btn btn-primary btn-lg btn-block"><?php echo __( 'Guardar cotizacion', 'er-cotizador' ); ?></button>
+					<button type="button" class="btn btn-primary btn-lg btn-block guardar"><?php echo __( 'Guardar cotizacion', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Guardar y enviar', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Enviar al cliente', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Nota de Entrega', 'er-cotizador' ); ?></button>
@@ -119,6 +131,48 @@
 				</tr>
 			</thead>
 			<tbody>
+			<?php foreach($cotizaProd as $item){
+				$precioTtl = $item->precio * $item->cantidad;
+				$ivaVal = 12;
+				if($item->iva == 1){
+					$iva = $precioTtl*($ivaVal/100);
+					$precioFinal = $precioTtl + $iva;
+				}else{
+					$iva = 0;
+					$precioFinal = $precioTtl;
+				}
+				?>
+				<tr class="elementos" itemid="<?php echo $item->ID ?>">
+					<td>
+                        <span class="prodLabel" itemid="<?php echo $item->id_prod ?>"><?php echo $item->titulo ?></span> 
+                        <span class="prodSelect" style="display:none !important;">
+                            <select class="general" style="width:100%;">
+								<?php foreach($productos as $producto){ ?>
+									<option id="<?php echo $producto->ID?>" itemprop="<?php echo $producto->precio?>" itemtype="<?php echo $producto->iva?>"><?php echo $producto->title?></option>
+								<?php }?>
+                            </select>
+                        </span>
+					</td>
+					<td class="center">
+                        <span class="cantProd"><?php echo $item->cantidad ?></span>
+                        <input type="text" class="tableInput" style='display:none !important;'>
+					</td>
+					<td class="right">
+                        <span class="precioUnitario"><?php echo number_format($item->precio, 2, ',', '.') ?></span>
+                        <input type="text" class="tableInput inputPrecio" style='display:none !important;'>
+					</td>
+					<td>
+						<div class="left" style="width: 25%; float: left;">
+							<button type="button" class="btn btn-sm btn-success float-right btn-iva"><i class="fa fa-<?php if($item->iva == 1){ echo "check-square"; }else{echo "square";} ?>"></i></button>
+						</div>
+                        <div class="right ivaPrecio" style="width: 75%; float: right;"><?php echo number_format($iva, 2, ',', '.') ?></div>
+					</td>
+					<td class="right precioTotal"><?php echo number_format($precioFinal, 2, ',', '.') ?></td>
+                    <td class="center">
+						<button type="button" class="btn btn-sm btn-danger float-right remove_item"><i class="fa fa-trash"></i></button>
+					</td>
+				</tr>
+			<?php } ?>
 				<tr class="clonar" style="display: none;" itemid="0">
 					<td>
                         <span class="prodLabel" style="display:none !important;"></span> 
