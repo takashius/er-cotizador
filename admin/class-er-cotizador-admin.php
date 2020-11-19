@@ -102,7 +102,9 @@ class Er_Cotizador_Admin {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-edit.js', array( 'jquery-min', 'jquery.notyfy' ), $this->version, false );
 			wp_enqueue_script( "bootbox", 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js', array( 'jquery-min' ), "5.4.0", 'all' );
 		}
+    	wp_enqueue_media();
 		wp_enqueue_script( "Select2", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery-min' ), "4.1.0", false );
+		wp_enqueue_script( "media-uploader", plugin_dir_url( __FILE__ ) . 'js/media-uploader.js', array( 'jquery-min' ), $this->version, false );
 	}
 
 	/**
@@ -229,6 +231,14 @@ class Er_Cotizador_Admin {
 		);
 	
 		add_settings_field( 
+			'er_logo', 
+			__( 'Logo', 'er-cotizador' ), 
+			array( $this, 'er_logo_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
 			'er_iva', 
 			__( 'Impuesto al Valor Agregado (IVA)', 'er-cotizador' ), 
 			array( $this, 'er_iva_render' ), 
@@ -241,7 +251,7 @@ class Er_Cotizador_Admin {
 
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' name='er_settings[er_name]' value='<?php echo $options['er_name']; ?>'>
+		<input type='text' class="regular-text" name='er_settings[er_name]' value='<?php echo $options['er_name']; ?>'>
 		<?php
 	
 	}
@@ -251,7 +261,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' name='er_settings[er_rif]' value='<?php echo $options['er_rif']; ?>'>
+		<input type='text' class="regular-text" name='er_settings[er_rif]' value='<?php echo $options['er_rif']; ?>'>
 		<?php
 	
 	}
@@ -261,7 +271,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' name='er_settings[er_dir_ln_1]' value='<?php echo $options['er_dir_ln_1']; ?>'>
+		<input type='text' class="regular-text" name='er_settings[er_dir_ln_1]' value='<?php echo $options['er_dir_ln_1']; ?>'>
 		<?php
 	
 	}
@@ -271,7 +281,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' name='er_settings[er_dir_ln_2]' value='<?php echo $options['er_dir_ln_2']; ?>'>
+		<input type='text' class="regular-text" name='er_settings[er_dir_ln_2]' value='<?php echo $options['er_dir_ln_2']; ?>'>
 		<?php
 	
 	}
@@ -281,7 +291,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' name='er_settings[er_tel]' value='<?php echo $options['er_tel']; ?>'>
+		<input type='text' class="regular-text" name='er_settings[er_tel]' value='<?php echo $options['er_tel']; ?>'>
 		<?php
 	
 	}
@@ -291,7 +301,19 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' name='er_settings[er_mail]' value='<?php echo $options['er_mail']; ?>'>
+		<input type='text' class="regular-text" name='er_settings[er_mail]' value='<?php echo $options['er_mail']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_logo_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input id="er_logo" type="hidden" name="er_settings[er_logo]" value="<?php echo $options['er_logo']; ?>" />
+		<img src="<?php echo $options['er_logo']?>" width="100">
+		<input type="button" class="button-primary upload_image_button" rel="er_logo" value="<?php echo __( 'Seleccionar imagen', 'er-cotizador' ) ?>" />
 		<?php
 	
 	}
@@ -301,7 +323,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' name='er_settings[er_iva]' value='<?php echo $options['er_iva']; ?>'>
+		<input type='text' class="regular-text" name='er_settings[er_iva]' value='<?php echo $options['er_iva']; ?>'>
 		<?php
 	
 	}

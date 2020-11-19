@@ -75,10 +75,10 @@
         {
             if($this->cabecera){
                 // Logo
-                //$this->Image($this->getDir().'images/logo_erdesarrollo_verde_grande.png',10,8,33);
+                $this->Image($this->options['er_logo'],10,8,33);
                 // Marca de Agua
                 $this->SetAlpha(0.2);
-                //$this->Image($this->getDir().'images/logo_erdesarrollo_verde_grande.png',40,140,110);
+                $this->Image($this->options['er_logo'],40,140,110);
                 $this->SetAlpha(1);
                 // Arial bold 15
                 $this->SetFont('times','B',12);
