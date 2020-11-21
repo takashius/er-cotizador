@@ -112,7 +112,7 @@
 				<div class="card">
 					<button type="button" class="btn btn-primary btn-lg btn-block guardar"><?php echo __( 'Guardar cotizacion', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Guardar y enviar', 'er-cotizador' ); ?></button>
-					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Enviar al cliente', 'er-cotizador' ); ?></button>
+					<button type="button" class="btn btn-secondary btn-lg btn-block send_mail"><?php echo __( 'Enviar al cliente', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Nota de Entrega', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block save-pdf"><?php echo __( 'Facturar', 'er-cotizador' ); ?></button>
 					<button type="button" class="btn btn-secondary btn-lg btn-block"><?php echo __( 'Facturar (Forma libre)', 'er-cotizador' ); ?></button>

@@ -185,6 +185,24 @@ $(document).ready(function() {
         });
         e.preventDefault();
     })
+
+    $(".send_mail").on('click', function(e){
+        const data = {
+            action: 'send_cotiza',
+            id: idCotiza
+        };
+        $('#loader').attr('style', 'visibility: visible;');
+        
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#loader').attr('style', 'visibility: hidden;');
+            notificacion("Se enviado el correo correctamente", 'success');
+        }).fail(function(error) {
+            $('#loader').attr('style', 'visibility: hidden;');
+            console.log( '[ ERROR ]', error );
+            notificacion("Ocurrio un error al enviar la factura, recargue la página e intente nuevamente", 'error');
+        });
+        e.preventDefault();
+    })
     
     $("body").on('click', '.guardar', function(e){
         //$('#myPleaseWait').modal('show');
@@ -247,11 +265,6 @@ $(document).ready(function() {
             cantidad = parseInt($(this).find('.cantProd').html());
             precioPro = parseInt($(this).find('.inputPrecio').attr('itemprop'));
             precio = parseFloat(limpiar_numero($(this).find('.precioUnitario').html()));
-			if(calcBsS == 1){
-				precio = precio*tasa;
-				$(this).find('.precioUnitario').html(number_format(precio, 2, ',', '.'));
-				calcular_subtotal($(this));
-			}
             precioTotal = cantidad*precio;
             precioPro = cantidad*precioPro;
             descuento = 0;
@@ -261,7 +274,7 @@ $(document).ready(function() {
             }
             
             if($(this).find(".btn-iva").find('i').hasClass('fa-check-square')){
-                iva = (precioTotal-descuento)*valorIva;
+                iva = (precioTotal)*valorIva;
                 precioFinal = (precioTotal-descuento)+iva;
             }else{
                 iva = 0;

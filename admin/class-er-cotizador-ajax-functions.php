@@ -287,7 +287,7 @@ class Er_Cotizador_Ajax_Functions {
 			if($cotiza->pordesc > 0){
 				$descuento = ($v->cantidad*$precio) * ($cotiza->pordesc/100);
 			}
-			$valorTmp = ($v->cantidad*$precio) - $descuento;
+			$valorTmp = ($v->cantidad*$precio);
 			if($v->iva){
 				$ivaItem += $valorTmp*($ivaVal/100);
 				$baseImponible += $valorTmp;
@@ -331,5 +331,46 @@ class Er_Cotizador_Ajax_Functions {
 
 		header("Content-type:application/pdf");
 		$pdf->Output('F', '../wp-content/uploads/reporte.pdf');
+	}
+
+	function send_cotiza() {
+		global $wpdb; 
+		$id = $_POST['id'];
+		$options = get_option( 'er_settings' );
+		$ivaVal = $options['er_iva'];
+		$urlWeb = get_site_url();
+	
+		$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
+		$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
+		$tablaPosts = $wpdb->prefix . "posts";
+		$tablaPostMeta = $wpdb->prefix . "postmeta";
+
+		$sql = "SELECT 
+			`".$tablaCotiza."`.*, 
+			`".$tablaPosts."`.`post_title`, 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'nombre') as 'nombre', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'apellido') as 'apellido', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'cedula-rif') as 'cedulaRif', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'correo') as 'correo', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'telefono') as 'telefono', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'ciudad') as 'ciudad', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'direccion') as 'direccion', 
+			(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'direccion-cont') as 'direccionCont'
+		FROM 
+			`".$tablaCotiza."`, `".$tablaPosts."` 
+		WHERE `".$tablaCotiza."`.`ID` = '$id' 
+			AND `".$tablaCotiza."`.`cliente_id` = `".$tablaPosts."`.`ID`";
+		$query = $wpdb->prepare($sql); 
+		$cotizacion = $wpdb->get_results($query);
+		$cotiza = $cotizacion[0];
+		$newDate = date("Y-m-d", strtotime($cotiza->fecha));
+	
+		$sql_cotizaProd = "SELECT * FROM `".$tablaCotizaProd."` WHERE `id_cotiza` = '".$id."'";
+		$query_cotizaProd = $wpdb->prepare($sql_cotizaProd);
+		$cotizaProd = $wpdb->get_results($query_cotizaProd);
+
+		include_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/mails/er-cotizador-mail-cotiza.php');
+		
+		wp_mail("takashi.onimaru@gmail.com", "Ejemplo de la función mail en WP", $correo);
 	}
 }

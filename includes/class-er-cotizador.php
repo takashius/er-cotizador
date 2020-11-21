@@ -165,6 +165,7 @@ class Er_Cotizador {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'admin_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'er_settings_init' );
+		$this->loader->add_filter( 'wp_mail_content_type', $this, 'tipo_de_contenido_html' );
 
 		$this->define_clientes_hooks();
 		$this->define_productos_hooks();
@@ -187,6 +188,7 @@ class Er_Cotizador {
 		$this->loader->add_action( 'manage_er-clientes_posts_custom_column', $ctp_cliente, 'list_clientes_posts_columns', 10, 2 );
 
 		$this->loader->add_filter( 'manage_er-clientes_posts_columns', $ctp_cliente, 'set_clientes_columns' );
+		
 	}
 
 	/**
@@ -218,6 +220,7 @@ class Er_Cotizador {
 		$this->loader->add_action( 'wp_ajax_edit_cotiza', $ajax_functions, 'edit_cotiza' );
 		$this->loader->add_action( 'wp_ajax_save_prods', $ajax_functions, 'save_prods' );
 		$this->loader->add_action( 'wp_ajax_save_pdf', $ajax_functions, 'save_pdf' );
+		$this->loader->add_action( 'wp_ajax_send_cotiza', $ajax_functions, 'send_cotiza' );
 	}
 
 	/**
@@ -259,5 +262,10 @@ class Er_Cotizador {
 	public function get_version() {
 		return $this->version;
 	}
+
+	function tipo_de_contenido_html() {
+		return 'text/html';
+	}
+   
 
 }
