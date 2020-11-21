@@ -1,4 +1,8 @@
 <?php 
+$color['ppl'] = $options['er_color_ppl']?$options['er_color_ppl']:'#008080';
+$color['sec'] = $options['er_color_sec']?$options['er_color_sec']:'#8CF7FC';
+$color['bg'] = $options['er_color_bg']?$options['er_color_bg']:'#2a2a2a';
+$color['title'] = $options['er_color_title']?$options['er_color_title']:'#ffffff';
 $correo = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -71,7 +75,7 @@ $correo = '
    </head>
    <body>    
 <!-- Start of seperator -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
    <tbody>
       <tr>
          <td>
@@ -88,7 +92,7 @@ $correo = '
 </table>
 <!-- End of seperator -->  
 <!-- Start of header -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="header">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="header">
    <tbody>
       <tr>
          <td>
@@ -124,7 +128,7 @@ $correo = '
                                     <table width="250" border="0" align="right" valign="middle" cellpadding="0" cellspacing="0" border="0" class="devicewidth">
                                        <tbody>
                                           <tr>
-                                             <td align="center" style="font-family: Helvetica, arial, sans-serif; font-size: 20px;color: #008080" st-content="phone"  height="60">
+                                             <td align="center" style="font-family: Helvetica, arial, sans-serif; font-size: 20px;color: '.$color['ppl'].'" st-content="phone"  height="60">
                                                 Tel: '.$options['er_tel'].'
                                              </td>
                                           </tr>
@@ -148,9 +152,11 @@ $correo = '
       </tr>
    </tbody>
 </table>
-<!-- End of Header -->
+<!-- End of Header -->';
+if($options['er_banner']){
+$correo .= '
 <!-- Start of main-banner -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="banner">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="banner">
    <tbody>
       <tr>
          <td>
@@ -165,7 +171,7 @@ $correo = '
                                  <td align="center" st-image="banner-image">
                                     <div class="imgpop">
                                        <a target="_blank" href="'.$urlWeb.'">
-                                           <img width="600" border="0" height="300" alt="" border="0" style="display:block; border:none; outline:none; text-decoration:none;" src="{{/front/images/banner1.jpg}}" class="banner" />
+                                           <img width="600" border="0" height="300" alt="" border="0" style="display:block; border:none; outline:none; text-decoration:none;" src="'.$options['er_banner'].'" class="banner" />
                                        </a>
                                     </div>
                                  </td>
@@ -181,9 +187,11 @@ $correo = '
       </tr>
    </tbody>
 </table>
-<!-- End of main-banner -->  
+<!-- End of main-banner -->  ';
+}
+$correo .= '
 <!-- Start of seperator -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
    <tbody>
       <tr>
          <td>
@@ -200,7 +208,7 @@ $correo = '
 </table>
 <!-- End of seperator -->
 <!-- Start of heading -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
    <tbody>
       <tr>
          <td>
@@ -208,10 +216,10 @@ $correo = '
                <tbody>
                   <tr>
                      <td width="100%">
-                        <table bgcolor="#008080" width="600" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth">
+                        <table bgcolor="'.$color['ppl'].'" width="600" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth">
                            <tbody>
                               <tr>
-                                 <td align="center" style="font-family: Helvetica, arial, sans-serif; font-size: 24px; color: #ffffff; padding: 15px 0;" st-content="heading" bgcolor="#008080" align="center">
+                                 <td align="center" style="font-family: Helvetica, arial, sans-serif; font-size: 24px; color: '.$color['title'].'; padding: 15px 0;" st-content="heading" bgcolor="'.$color['ppl'].'" align="center">
                                     ¡Gracias!
                                  </td>
                               </tr>
@@ -227,7 +235,7 @@ $correo = '
 </table>
 <!-- End of heading --> 
 <!-- article -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable">
    <tbody>
       <tr>
          <td>
@@ -257,8 +265,8 @@ $correo = '
                                              <!-- content -->
                                              <tr>
                                                  <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #4f5458; text-align:left; line-height: 20px;">
-                                                    <p>Este correo es para confirmar su presupuesto #'.$cotiza->ID.' con <a href="'.$urlWeb.'" style="text-decoration: none; color: #008080">'.$options['er_name'].'</a>. para que pueda revisarlo y decidir si se ajusta a sus necesidades.<br/>&nbsp;</p>
-                                                    <p>Si tienes alguna duda o pregunta sobre su presupuesto escríbenos a <a href="mailto:'.$options['er_mail'].'" style="text-decoration: none; color: #008080">'.$options['er_mail'].'</a><br/>&nbsp;</p>
+                                                    <p>Este correo es para confirmar su presupuesto #'.$cotiza->ID.' con <a href="'.$urlWeb.'" style="text-decoration: none; color: '.$color['ppl'].'">'.$options['er_name'].'</a>. para que pueda revisarlo y decidir si se ajusta a sus necesidades.<br/>&nbsp;</p>
+                                                    <p>Si tienes alguna duda o pregunta sobre su presupuesto escríbenos a <a href="mailto:'.$options['er_mail'].'" style="text-decoration: none; color: '.$color['ppl'].'">'.$options['er_mail'].'</a><br/>&nbsp;</p>
                                                  </td>
                                              </tr>
                                          </tbody>
@@ -272,7 +280,7 @@ $correo = '
                               <!-- Spacing -->
                               <!-- bottom-border -->
                               <tr>
-                                 <td width="100%" bgcolor="#008080" height="3" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                 <td width="100%" bgcolor="'.$color['ppl'].'" height="3" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
                               </tr>
                               <!-- /bottom-border -->
                            </tbody>
@@ -287,7 +295,7 @@ $correo = '
 </table>
 <!-- end of article -->
 <!-- Start of seperator -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
    <tbody>
       <tr>
          <td>
@@ -304,7 +312,7 @@ $correo = '
 </table>
 <!-- End of seperator --> 
 <!-- Start of cabecera de presupuesto -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
    <tbody>
       <tr>
          <td>
@@ -312,10 +320,10 @@ $correo = '
                <tbody>
                   <tr>
                      <td width="100%">
-                        <table bgcolor="#008080" width="600" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth">
+                        <table bgcolor="'.$color['ppl'].'" width="600" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth">
                            <tbody>
                               <tr>
-                                 <td align="center" style="font-family: Helvetica, arial, sans-serif; font-size: 24px; color: #ffffff; padding: 15px 0;" st-content="heading" bgcolor="#008080" align="center">
+                                 <td align="center" style="font-family: Helvetica, arial, sans-serif; font-size: 24px; color: '.$color['title'].'; padding: 15px 0;" st-content="heading" bgcolor="'.$color['ppl'].'" align="center">
                                     Su presupuesto #'.$cotiza->ID.'
                                  </td>
                               </tr>
@@ -331,7 +339,7 @@ $correo = '
 </table>
 <!-- End of cabecera de presupuesto --> 
 <!-- Presupuesto -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable">
    <tbody>
       <tr>
          <td>
@@ -348,11 +356,11 @@ $correo = '
                               <!-- Spacing -->
                               <tr>
                                  <td>
-                                     <table width="560" align="center" border="1" bordercolor="#8CF7FC" cellpadding="0" cellspacing="0" class="devicewidthinner">
+                                     <table width="560" align="center" border="1" bordercolor="'.$color['sec'].'" cellpadding="0" cellspacing="0" class="devicewidthinner">
                                          
                                          <tbody>
                                              <!-- title -->
-                                             <tr bgcolor="#F0F0F0" style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: #008080; text-align:center;">
+                                             <tr bgcolor="#F0F0F0" style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: '.$color['ppl'].'; text-align:center;">
                                                  <td style="padding: 10px;" width="200px">
                                                      Producto
                                                  </td>
@@ -440,7 +448,7 @@ $correo = '
                                              </tr>';
                                             }
                                              $precioTtl = $totalGrl + $ivaTtl - $descuento;
-                                             $correo .= '<tr bgcolor="#F0F0F0" style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #008080; text-align:left; line-height: 20px;">
+                                             $correo .= '<tr bgcolor="#F0F0F0" style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: '.$color['ppl'].'; text-align:left; line-height: 20px;">
                                                  <td colspan="4" style="padding: 5px; text-align: right;">
                                                      Total
                                                  </td>
@@ -461,7 +469,7 @@ $correo = '
                               <!-- Spacing -->
                               <!-- bottom-border -->
                               <tr>
-                                 <td width="100%" bgcolor="#008080" height="3" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                                 <td width="100%" bgcolor="'.$color['ppl'].'" height="3" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
                               </tr>
                               <!-- /bottom-border -->
                            </tbody>
@@ -476,7 +484,7 @@ $correo = '
 </table>
 <!-- end of Presupuesto -->
 <!-- Start of seperator -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
    <tbody>
       <tr>
          <td>
@@ -493,7 +501,7 @@ $correo = '
 </table>
 <!-- End of seperator --> 
 <!-- footer -->
-<table width="100%" bgcolor="#008080" cellpadding="0" cellspacing="0" border="0" id="backgroundTable">
+<table width="100%" bgcolor="'.$color['ppl'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable">
    <tbody>
       <tr>
          <td>
@@ -501,7 +509,7 @@ $correo = '
                <tbody>
                   <tr>
                      <td width="100%">
-                        <table bgcolor="#008080" width="600" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth">
+                        <table bgcolor="'.$color['ppl'].'" width="600" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth">
                            <tbody>
                               <tr>
                                  <td>
@@ -544,7 +552,7 @@ $correo = '
                                           </tr>
                                           <!-- Spacing -->
                                           <tr>
-                                             <td style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: #ffffff; text-align:left;">
+                                             <td style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: '.$color['title'].'; text-align:left;">
                                                 Contactos
                                              </td>
                                           </tr>
@@ -554,9 +562,9 @@ $correo = '
                                           </tr>
                                           <!-- Spacing -->
                                           <tr>
-                                             <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #ffffff; text-align:left;">
+                                             <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: '.$color['title'].'; text-align:left;">
                                              '.$options['er_tel'].'<br />
-                                             <a href="mailto:'.$options['er_mail'].'" style="text-decoration: none; color: #8CF7FC">'.$options['er_mail'].'</a>
+                                             <a href="mailto:'.$options['er_mail'].'" style="text-decoration: none; color: '.$color['sec'].'">'.$options['er_mail'].'</a>
                                              </td>
                                           </tr>
                                           <!-- Spacing -->
@@ -581,7 +589,7 @@ $correo = '
 </table>
 <!-- end of footer -->
 <!-- Start of Postfooter -->
-<table width="100%" bgcolor="#2a2a2a" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="postfooter" >
+<table width="100%" bgcolor="'.$color['bg'].'" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="postfooter" >
    <tbody>
       <tr>
          <td>
@@ -598,7 +606,7 @@ $correo = '
                               <!-- Spacing -->
                               <tr>
                                  <!--td align="center" valign="middle" style="font-family: Helvetica, arial, sans-serif; font-size: 13px;color: #ffffff" st-content="preheader">
-                                    Dont want to receive email Updates? <a href="#" style="text-decoration: none; color: #008080">Unsubscribe here </a> 
+                                    Dont want to receive email Updates? <a href="#" style="text-decoration: none; color: '.$color['ppl'].'">Unsubscribe here </a> 
                                  </td-->
                               </tr>
                               <!-- Spacing -->

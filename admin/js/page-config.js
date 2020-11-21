@@ -18,4 +18,6 @@ jQuery(document).ready(function($){
       });
       mediaUploader.open();
     });
+
+    $('.my-color-field').wpColorPicker();
   });

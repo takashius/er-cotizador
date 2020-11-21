@@ -81,6 +81,7 @@ class Er_Cotizador_Admin {
 			wp_enqueue_style( "jquery.notyfy", plugin_dir_url( __FILE__ ) . 'css/jquery.notyfy.css', array(), $this->version, 'all' );
 			wp_enqueue_style( "jquery.notyfy-themes", plugin_dir_url( __FILE__ ) . 'css/jquery.notyfy-themes.default.css', array(), $this->version, 'all' );
 		}
+		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( "Select2", plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), "4.1.0", 'all' );
 		wp_enqueue_style( "select2-bootstrap-theme", plugin_dir_url( __FILE__ ) . 'css/select2-bootstrap.min.css', array(), "0.1.0", 'all' );
 	}
@@ -104,7 +105,7 @@ class Er_Cotizador_Admin {
 		}
     	wp_enqueue_media();
 		wp_enqueue_script( "Select2", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery-min' ), "4.1.0", false );
-		wp_enqueue_script( "media-uploader", plugin_dir_url( __FILE__ ) . 'js/media-uploader.js', array( 'jquery-min' ), $this->version, false );
+		wp_enqueue_script( "page-config", plugin_dir_url( __FILE__ ) . 'js/page-config.js', array( 'jquery-min', 'wp-color-picker' ), $this->version, false );
 	}
 
 	/**
@@ -182,6 +183,13 @@ class Er_Cotizador_Admin {
 			'erCotizador'
 		);
 	
+		add_settings_section(
+			'er_erCotizador_colors_mail', 
+			__( 'Colores para correo', 'er-cotizador' ), 
+			array( $this, 'er_settings_colors_mail_callback' ), 
+			'erCotizador'
+		);
+	
 		add_settings_field( 
 			'er_name', 
 			__( 'Nombre de la empresa', 'er-cotizador' ), 
@@ -239,11 +247,51 @@ class Er_Cotizador_Admin {
 		);
 	
 		add_settings_field( 
+			'er_banner', 
+			__( 'Banner para correo', 'er-cotizador' ), 
+			array( $this, 'er_banner_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
 			'er_iva', 
 			__( 'Impuesto al Valor Agregado (IVA)', 'er-cotizador' ), 
 			array( $this, 'er_iva_render' ), 
 			'erCotizador', 
 			'er_erCotizador_money_section' 
+		);
+	
+		add_settings_field( 
+			'er_color_ppl', 
+			__( 'Color Principal', 'er-cotizador' ), 
+			array( $this, 'er_color_ppl_render' ), 
+			'erCotizador', 
+			'er_erCotizador_colors_mail' 
+		);
+	
+		add_settings_field( 
+			'er_color_sec', 
+			__( 'Color Secundario', 'er-cotizador' ), 
+			array( $this, 'er_color_sec_render' ), 
+			'erCotizador', 
+			'er_erCotizador_colors_mail' 
+		);
+	
+		add_settings_field( 
+			'er_color_bg', 
+			__( 'Color de fondo', 'er-cotizador' ), 
+			array( $this, 'er_color_bg_render' ), 
+			'erCotizador', 
+			'er_erCotizador_colors_mail' 
+		);
+	
+		add_settings_field( 
+			'er_color_title', 
+			__( 'Color de titulos', 'er-cotizador' ), 
+			array( $this, 'er_color_title_render' ), 
+			'erCotizador', 
+			'er_erCotizador_colors_mail' 
 		);
 	}
 
@@ -319,11 +367,63 @@ class Er_Cotizador_Admin {
 	}
 	
 	
+	function er_banner_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input id="er_banner" type="hidden" name="er_settings[er_banner]" value="<?php echo $options['er_banner']; ?>" />
+		<img src="<?php echo $options['er_banner']?>" width="100">
+		<input type="button" class="button-primary upload_image_button" rel="er_banner" value="<?php echo __( 'Seleccionar imagen', 'er-cotizador' ) ?>" />
+		<?php
+	
+	}
+	
+	
 	function er_iva_render(  ) { 
 	
 		$options = get_option( 'er_settings' );
 		?>
 		<input type='text' class="regular-text" name='er_settings[er_iva]' value='<?php echo $options['er_iva']; ?>'>
+		<?php
+	
+	}
+	
+	
+	function er_color_ppl_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' class="regular-text my-color-field" name='er_settings[er_color_ppl]' value='<?php echo $options['er_color_ppl']?$options['er_color_ppl']:'#008080'; ?>'  data-default-color='#008080'>
+		<?php
+	
+	}
+	
+	
+	function er_color_sec_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' class="regular-text my-color-field" name='er_settings[er_color_sec]' value='<?php echo $options['er_color_sec']?$options['er_color_sec']:'#8CF7FC'; ?>'  data-default-color='#8CF7FC'>
+		<?php
+	
+	}
+	
+	
+	function er_color_bg_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' class="regular-text my-color-field" name='er_settings[er_color_bg]' value='<?php echo $options['er_color_bg']?$options['er_color_bg']:'#2a2a2a'; ?>'  data-default-color='#2a2a2a'>
+		<?php
+	
+	}
+	
+	
+	function er_color_title_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' class="regular-text my-color-field" name='er_settings[er_color_title]' value='<?php echo $options['er_color_title']?$options['er_color_title']:'#ffffff'; ?>'  data-default-color='#ffffff'>
 		<?php
 	
 	}
@@ -339,6 +439,13 @@ class Er_Cotizador_Admin {
 	function er_settings_money_section_callback(  ) { 
 	
 		echo __( 'Configura parametros relacionados a la moneda y calculos', 'er-cotizador' );
+	
+	}
+	
+	
+	function er_settings_colors_mail_callback(  ) { 
+	
+		echo __( 'Seleccione los colores para el correo de presupuesto', 'er-cotizador' );
 	
 	}
 	
