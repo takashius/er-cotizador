@@ -41,9 +41,9 @@ class Er_Cotizador_Activator {
         .'`comentarios` text NOT NULL,'
 		.'`factura` int NOT NULL DEFAULT 0,'
 		.'`status` tinyint NOT NULL DEFAULT 1,'
-		.'`total` double NULL AFTER `status`,'
-		.'`pordesc` int NULL AFTER `total`,'
-		.'`montdesc` double NULL AFTER `pordesc`,'
+		.'`total` double NULL,'
+		.'`pordesc` int NULL,'
+		.'`montdesc` double NULL,'
         .'`fecha` datetime NOT NULL DEFAULT now()'
         .');';
 		$wpdb->get_results($query);
