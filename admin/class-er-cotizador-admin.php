@@ -94,15 +94,15 @@ class Er_Cotizador_Admin {
 	public function enqueue_scripts() {
 		wp_enqueue_script( "jquery-min", plugin_dir_url( __FILE__ ) . 'js/jquery-3.5.1.min.js', array( ), "3.5.1", false );
 		wp_enqueue_script( "bootstrap-min", plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array( 'jquery-min' ), "1.10.22", false );
+		wp_enqueue_script( "jquery.notyfy", plugin_dir_url( __FILE__ ) . 'js/jquery.notyfy.js', array( 'jquery-min' ), $this->version, false );
 		if(get_current_screen()->base == "toplevel_page_er-cotizador"){
 			wp_enqueue_script( "DataTables-min", plugin_dir_url( __FILE__ ) . 'js/datatables.min.js', array( 'jquery-min', 'bootstrap-min' ), "1.10.22", false );
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-admin.js', array( 'jquery-min' ), $this->version, false );
 		}
 		if(get_current_screen()->base == "admin_page_er-cotizador-edit"){
-			wp_enqueue_script( "jquery.notyfy", plugin_dir_url( __FILE__ ) . 'js/jquery.notyfy.js', array( 'jquery-min' ), $this->version, false );
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-edit.js', array( 'jquery-min', 'jquery.notyfy' ), $this->version, false );
-			wp_enqueue_script( "bootbox", 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js', array( 'jquery-min' ), "5.4.0", 'all' );
 		}
+		wp_enqueue_script( "bootbox", 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js', array( 'jquery-min' ), "5.4.0", 'all' );
     	wp_enqueue_media();
 		wp_enqueue_script( "Select2", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery-min' ), "4.1.0", false );
 		wp_enqueue_script( "page-config", plugin_dir_url( __FILE__ ) . 'js/page-config.js', array( 'jquery-min', 'wp-color-picker' ), $this->version, false );

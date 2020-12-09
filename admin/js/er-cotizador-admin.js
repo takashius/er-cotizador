@@ -58,10 +58,62 @@ $(document).ready(function() {
 			$('#loader_new_cotiza').attr('style', 'visibility: visible;');
 			jQuery.post(ajaxurl, data, function(response) {
 				window.location.href = url + "&id=" + response;
-				$('#loader_new_cotiza').attr('style', 'visibility: hidden;');
 			}).fail(function(error) {
 				console.log( error );
 			});
 		}
 	});
+
+	$('#listado tbody').on( 'click', '.btn-danger', function () {
+		const $this = $(this);
+		bootbox.confirm("&iquest;seguro que desea eliminar esta cotización?", function(result) {
+			if(result){
+				
+				$('#loader_new_cotiza').attr('style', 'visibility: visible;');
+				const data = {
+					action: 'delete_cotiza',
+					id: $this.attr('rel')
+				}
+				jQuery.post(ajaxurl, data, function(response) {
+					$('#loader_new_cotiza').attr('style', 'visibility: none;');
+					table
+					.row( $this.parents('tr') )
+					.remove()
+					.draw();
+					notificacion("Se ha borrado correctamente", 'success');
+				}).fail(function(error) {
+					$('#loader_new_cotiza').attr('style', 'visibility: none;');
+					console.log( error );
+					notificacion("Ocurrio un error al intentar borrar, recargue la página e intente nuevamente", 'error');
+				});
+			}
+		});
+		
+	} );
+
 } );
+
+function notificacion(texto, tipo){
+    tipo = (tipo)?tipo:'alert'; // alert|error|success|information|warning|primary|confirm
+    var layout = 'bottom';
+    notyfy({
+        text: texto,
+        type: tipo,
+        dismissQueue: true,
+        layout: layout,
+        timeout: 4000,
+        buttons: (tipo != 'confirm') ? false : [{
+                addClass: 'btn btn-primary', text: 'Ok', onClick: function($notyfy) {
+                    $notyfy.close();
+                    //return true;
+                }
+            },
+            {
+                addClass: 'btn btn-danger', text: 'Cancel', onClick: function($notyfy) {
+                    $notyfy.close();
+                    //return false;
+                }
+            }]
+    });
+    return false;
+}

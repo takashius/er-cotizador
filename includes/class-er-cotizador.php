@@ -221,6 +221,7 @@ class Er_Cotizador {
 		$this->loader->add_action( 'wp_ajax_save_pdf', $ajax_functions, 'save_pdf' );
 		$this->loader->add_action( 'wp_ajax_send_cotiza', $ajax_functions, 'send_cotiza' );
 		$this->loader->add_action( 'wp_ajax_delete_prod', $ajax_functions, 'delete_prod' );
+		$this->loader->add_action( 'wp_ajax_delete_cotiza', $ajax_functions, 'delete_cotiza' );
 	}
 
 	/**

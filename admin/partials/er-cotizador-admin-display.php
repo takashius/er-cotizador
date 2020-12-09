@@ -37,7 +37,9 @@
     $query_cotizaciones = $wpdb->prepare($sql_cotizaciones);
     $cotizaciones = $wpdb->get_results($query_cotizaciones);
 ?>
-
+<div id="loader_new_cotiza" class="pre-load-web">
+    <div class="imagen-load"><div class="preloader"></div> <?php echo __( 'Cargando...', 'er-cotizador' ); ?></div>
+</div>
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
@@ -101,7 +103,7 @@
                         <a href="<?php echo get_site_url()."/wp-admin/admin.php?page=er-cotizador-edit&id=".$cotiza->ID; ?>" type="button" class="btn btn-success" aria-label="Left Align">
                             <i class="fa fa-edit"></i>
                         </a>
-                        <a type="button" class="btn btn-danger" aria-label="Left Align">
+                        <a type="button" class="btn btn-danger" rel="<?php echo $cotiza->ID ?>" aria-label="Left Align">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>
@@ -129,9 +131,7 @@
         
         <div class="modal-dialog">
             <div class="modal-content">
-            <div id="loader_new_cotiza" class="pre-load-web">
-                <div class="imagen-load"><div class="preloader"></div> <?php echo __( 'Cargando...', 'er-cotizador' ); ?></div>
-            </div>
+            
             <div class="modal-header">
                 <h5 class="modal-title" id="nuevaCotizacionLabel"><?php echo __( 'Nueva cotizacion', 'er-cotizador' ); ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

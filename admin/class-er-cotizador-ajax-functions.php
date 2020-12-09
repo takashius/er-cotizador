@@ -119,6 +119,18 @@ class Er_Cotizador_Ajax_Functions {
     
         wp_die();
 	}
+
+	function delete_cotiza(){
+		global $wpdb; 
+		$id = $_POST['id'];
+		$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
+		$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
+
+		$wpdb->delete($tablaCotizaProd, array( 'id_cotiza' => $id ));
+		$wpdb->delete($tablaCotiza, array( 'ID' => $id ));
+    
+        wp_die();
+	}
 	
 	function save_prods() {
 		global $wpdb; 
