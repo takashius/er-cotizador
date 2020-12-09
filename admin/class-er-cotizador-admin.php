@@ -121,7 +121,8 @@ class Er_Cotizador_Admin {
 			'manage_options', // Capability requirement to see the link
 			'er-cotizador',
 			array( $this, 'home_page' ),
-			'dashicons-chart-bar'
+			'dashicons-chart-bar',
+			27
 		);
 		add_submenu_page(
 			'er-cotizador',
