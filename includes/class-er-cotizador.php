@@ -215,12 +215,12 @@ class Er_Cotizador {
 	private function define_ajax_functions_hooks() {
 		$ajax_functions = new Er_Cotizador_Ajax_Functions( $this->get_plugin_name(), $this->get_version() );
 		
-		$this->loader->add_action( 'wp_ajax_my_action', $ajax_functions, 'my_action' );
 		$this->loader->add_action( 'wp_ajax_save_cotiza', $ajax_functions, 'save_cotiza' );
 		$this->loader->add_action( 'wp_ajax_edit_cotiza', $ajax_functions, 'edit_cotiza' );
 		$this->loader->add_action( 'wp_ajax_save_prods', $ajax_functions, 'save_prods' );
 		$this->loader->add_action( 'wp_ajax_save_pdf', $ajax_functions, 'save_pdf' );
 		$this->loader->add_action( 'wp_ajax_send_cotiza', $ajax_functions, 'send_cotiza' );
+		$this->loader->add_action( 'wp_ajax_delete_prod', $ajax_functions, 'delete_prod' );
 	}
 
 	/**

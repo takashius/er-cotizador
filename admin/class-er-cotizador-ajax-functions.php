@@ -54,18 +54,6 @@ class Er_Cotizador_Ajax_Functions {
 
     }
 
-    function my_action() {
-        global $wpdb; // this is how you get access to the database
-    
-        $whatever = intval( $_POST['whatever'] );
-    
-        $whatever += 10;
-    
-            echo $whatever;
-    
-        wp_die(); // this is required to terminate immediately and return a proper response
-    }
-
     function save_cotiza() {
         global $wpdb; 
     
@@ -120,6 +108,16 @@ class Er_Cotizador_Ajax_Functions {
 		}
 
 		wp_die();
+	}
+
+	function delete_prod(){
+		global $wpdb; 
+		$id = $_POST['id'];
+		$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
+
+		$wpdb->delete($tablaCotizaProd, array( 'ID' => $id ));
+    
+        wp_die();
 	}
 	
 	function save_prods() {

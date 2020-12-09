@@ -333,27 +333,21 @@ $(document).ready(function() {
     
     function quitar_producto(obj){
         obj.fadeOut('slow');
-        var datos = {
-            id: obj.attr('itemid')
-        };
         if(obj.attr('itemid') != 0){
-            $.ajax({
-                type: "POST",
-                url: $("#urlAjax").attr('itemref'),
-                data: "data="+JSON.stringify(datos),
-                dataType: "json",
-                success: function(msj){
-                    obj.remove();
-                    if($('.elementos').length <= 0){
-                        $('.vacio').fadeIn('slow');
-                    }
-                    calcular_total();
-                    notificacion("Se ha borrado correctamente", 'success');
-                },
-                error: function(msj){ 
-                    console.log(msj);
-                    notificacion("Ocurrio un error al intentar borrar, recargue la página e intente nuevamente", 'error');
+            const data = {
+                action: 'delete_prod',
+                id: obj.attr('itemid')
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                obj.remove();
+                if($('.elementos').length <= 0){
+                    $('.vacio').fadeIn('slow');
                 }
+                calcular_total();
+                notificacion("Se ha borrado correctamente", 'success');
+            }).fail(function(error) {
+                console.log(msj);
+                notificacion("Ocurrio un error al intentar borrar, recargue la página e intente nuevamente", 'error');
             });
         }else{
             obj.remove();
