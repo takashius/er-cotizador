@@ -19,5 +19,5 @@ jQuery(document).ready(function($){
       mediaUploader.open();
     });
 
-    $('.my-color-field').wpColorPicker();
+    $('.color-field').wpColorPicker();
   });

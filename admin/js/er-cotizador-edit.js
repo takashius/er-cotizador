@@ -163,50 +163,57 @@ $(document).ready(function() {
         calcular_total();
     });
 
-    $(".save-pdf").on('click', function(e){
+    $(".save-fact").on('click', function(e){
         const data = {
             action: 'save_pdf',
-            id: idCotiza
+            id: idCotiza,
+            presupuesto: false,
+            libre: false
         };
         $('#loader').attr('style', 'visibility: visible;');
-        
-        jQuery.post(ajaxurl, data, function(response) {
-            $('#loader').attr('style', 'visibility: hidden;');
-            notificacion("Se generado la factura correctamente", 'success');
-            var link = document.createElement('a');
-            link.href = urlBase + '/wp-content/uploads/reporte.pdf';
-            link.download = 'factura_' + idCotiza + '.pdf';
-            link.dispatchEvent(new MouseEvent('click'));
-            console.log(response);
-        }).fail(function(error) {
-            $('#loader').attr('style', 'visibility: hidden;');
-            console.log( '[ ERROR ]', error );
-            notificacion("Ocurrio un error al generar la factura, recargue la página e intente nuevamente", 'error');
-        });
+        save_pdf(data);
         e.preventDefault();
-    })
+    });
+
+    $(".save-fact-libre").on('click', function(e){
+        const data = {
+            action: 'save_pdf',
+            id: idCotiza,
+            presupuesto: false,
+            libre: true
+        };
+        $('#loader').attr('style', 'visibility: visible;');
+        save_pdf(data);
+        e.preventDefault();
+    });
+
+    $(".save-presupuesto").on('click', function(e){
+        const data = {
+            action: 'save_pdf',
+            id: idCotiza,
+            presupuesto: true,
+            libre: false
+        };
+        $('#loader').attr('style', 'visibility: visible;');
+        save_pdf(data);
+        e.preventDefault();
+    });
 
     $(".send_mail").on('click', function(e){
-        const data = {
-            action: 'send_cotiza',
-            id: idCotiza
-        };
-        $('#loader').attr('style', 'visibility: visible;');
         
-        jQuery.post(ajaxurl, data, function(response) {
-            $('#loader').attr('style', 'visibility: hidden;');
-            notificacion("Se enviado el correo correctamente", 'success');
-        }).fail(function(error) {
-            $('#loader').attr('style', 'visibility: hidden;');
-            console.log( '[ ERROR ]', error );
-            notificacion("Ocurrio un error al enviar la factura, recargue la página e intente nuevamente", 'error');
-        });
+        $('#loader').attr('style', 'visibility: visible;');
+        send_mail();
+        
         e.preventDefault();
-    })
+    });
     
     $("body").on('click', '.guardar', function(e){
-        //$('#myPleaseWait').modal('show');
         guardar(false);
+        e.preventDefault();
+    });
+    
+    $("body").on('click', '.guardar_enviar', function(e){
+        guardar(true);
         e.preventDefault();
     });
 
@@ -231,6 +238,37 @@ $(document).ready(function() {
         });
         e.preventDefault();
     });
+
+    function send_mail(){
+        const data = {
+            action: 'send_cotiza',
+            id: idCotiza
+        };
+
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#loader').attr('style', 'visibility: hidden;');
+            notificacion("Se enviado el correo correctamente", 'success');
+        }).fail(function(error) {
+            $('#loader').attr('style', 'visibility: hidden;');
+            console.log( '[ ERROR ]', error );
+            notificacion("Ocurrio un error al enviar la factura, recargue la página e intente nuevamente", 'error');
+        });
+    }
+
+    function save_pdf(data){
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#loader').attr('style', 'visibility: hidden;');
+            notificacion("Se generado la factura correctamente", 'success');
+            var link = document.createElement('a');
+            link.href = urlBase + '/wp-content/uploads/reporte.pdf';
+            link.download = 'factura_' + idCotiza + '.pdf';
+            link.dispatchEvent(new MouseEvent('click'));
+        }).fail(function(error) {
+            $('#loader').attr('style', 'visibility: hidden;');
+            console.log( '[ ERROR ]', error );
+            notificacion("Ocurrio un error al generar la factura, recargue la página e intente nuevamente", 'error');
+        });
+    }
 
     function calcular_subtotal(obj){
         valorIva = ivaConfig/100;
@@ -337,7 +375,7 @@ $(document).ready(function() {
             }
             item = {
                 id: $(this).attr('itemid'),
-                cotiza: $("#idCotiza").attr('itemid'),
+                cotiza: idCotiza,
                 nombre: $(this).find('.prodLabel').html(),
                 prod: $(this).find('.prodLabel').attr('itemid'),
                 cantidad: parseInt($(this).find('.cantProd').html()),
@@ -348,7 +386,7 @@ $(document).ready(function() {
         });
         cotizacion = {
             elementos : elementos,
-            id: $("#idCotiza").attr('itemid'),
+            id: idCotiza,
             total: limpiar_numero($("#totalPre").html()),
             pordesc: parseInt($('#descuento').val()),
             ttldesc: limpiar_numero($("#subdesc").html())
@@ -360,11 +398,16 @@ $(document).ready(function() {
 
         $('#loader').attr('style', 'visibility: visible;');
         jQuery.post(ajaxurl, data, function(response) {
-            $('#loader').attr('style', 'visibility: hidden;');
             $(".elementos[itemid='0']").each(function(i){
                 $(this).attr('itemid', response[i]);
             });
-            notificacion("Se ha guardado correctamente", 'success');
+            if(enviar){
+                send_mail();
+            }else{
+                $('#loader').attr('style', 'visibility: hidden;');
+                notificacion("Se ha guardado correctamente", 'success');
+            }
+            
         }).fail(function(error) {
             console.log( '[ ERROR ]', error );
             notificacion("Ocurrio un error al intentar guardar, recargue la página e intente nuevamente", 'error');

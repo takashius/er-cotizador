@@ -173,6 +173,8 @@ class Er_Cotizador_Ajax_Functions {
 	function save_pdf() {
 		global $wpdb; 
 		$id = $_POST['id'];
+		$presupuesto = $_POST['presupuesto'];
+		$fiscal = $_POST['libre'];
 		$options = get_option( 'er_settings' );
 		$ivaVal = $options['er_iva'];
 	
@@ -209,9 +211,19 @@ class Er_Cotizador_Ajax_Functions {
 
 		$pdf = new Factura();
 		$pdf->setOptions($options);
-		$pdf->setCabecera(true);
+		if($fiscal == 'true'){
+			$pdf->setCabecera(false);
+		}else{
+			$pdf->setCabecera(true);
+		}
+		
 		$pdf->AddPage();
-		$pdf->fiscal($cotiza->factura);
+		if($presupuesto == 'true'){
+            $pdf->presupuesto();
+        }else if($fiscal  == 'false'){
+            $pdf->fiscal($cotiza->factura);
+        }
+		
 		$pdf->SetFont('Arial','',8);
 		
 		$pdf->RoundedRect(11, 52, 123, 25, 3, ''); //Informacion del cliente
@@ -294,7 +306,7 @@ class Er_Cotizador_Ajax_Functions {
 			}
 			$mondesc += $descuento;
 		}
-		if($cotiza->factura > 0 && !$nota){
+		if($presupuesto  == 'false' && $fiscal  == 'false'){
 			$pdf->SetFont('Arial','',8);
 			$pdf->SetXY(13, 265); $pdf->Cell(29,5,utf8_decode('ESTA FACTURA VA SIN TACHADURA NI ENMIENDAS'),0,0,'l');
 			$pdf->SetFont('Arial','B',10);

@@ -393,7 +393,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' class="regular-text my-color-field" name='er_settings[er_color_ppl]' value='<?php echo $options['er_color_ppl']?$options['er_color_ppl']:'#008080'; ?>'  data-default-color='#008080'>
+		<input type='text' class="regular-text color-field" name='er_settings[er_color_ppl]' value='<?php echo $options['er_color_ppl']?$options['er_color_ppl']:'#008080'; ?>'  data-default-color='#008080'>
 		<?php
 	
 	}
@@ -403,7 +403,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' class="regular-text my-color-field" name='er_settings[er_color_sec]' value='<?php echo $options['er_color_sec']?$options['er_color_sec']:'#8CF7FC'; ?>'  data-default-color='#8CF7FC'>
+		<input type='text' class="regular-text color-field" name='er_settings[er_color_sec]' value='<?php echo $options['er_color_sec']?$options['er_color_sec']:'#8CF7FC'; ?>'  data-default-color='#8CF7FC'>
 		<?php
 	
 	}
@@ -413,7 +413,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' class="regular-text my-color-field" name='er_settings[er_color_bg]' value='<?php echo $options['er_color_bg']?$options['er_color_bg']:'#2a2a2a'; ?>'  data-default-color='#2a2a2a'>
+		<input type='text' class="regular-text color-field" name='er_settings[er_color_bg]' value='<?php echo $options['er_color_bg']?$options['er_color_bg']:'#2a2a2a'; ?>'  data-default-color='#2a2a2a'>
 		<?php
 	
 	}
@@ -423,7 +423,7 @@ class Er_Cotizador_Admin {
 	
 		$options = get_option( 'er_settings' );
 		?>
-		<input type='text' class="regular-text my-color-field" name='er_settings[er_color_title]' value='<?php echo $options['er_color_title']?$options['er_color_title']:'#ffffff'; ?>'  data-default-color='#ffffff'>
+		<input type='text' class="regular-text color-field" name='er_settings[er_color_title]' value='<?php echo $options['er_color_title']?$options['er_color_title']:'#ffffff'; ?>'  data-default-color='#ffffff'>
 		<?php
 	
 	}
