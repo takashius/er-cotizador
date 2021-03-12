@@ -360,6 +360,7 @@ class Er_Cotizador_Ajax_Functions {
 		$id = $_POST['id'];
 		$options = get_option( 'er_settings' );
 		$ivaVal = $options['er_iva'];
+		$correoCopia = $options['er_mail'];
 		$urlWeb = get_site_url();
 	
 		$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
@@ -393,6 +394,8 @@ class Er_Cotizador_Ajax_Functions {
 
 		include_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/mails/er-cotizador-mail-cotiza.php');
 		
-		wp_mail("takashi.onimaru@gmail.com", "Ejemplo de la función mail en WP", $correo);
+        $headers[] = 'Bcc: '.$correoCopia;
+		
+		wp_mail($cotiza->correo, "Cotizacion en La Guachafa", $correo, $headers);
 	}
 }

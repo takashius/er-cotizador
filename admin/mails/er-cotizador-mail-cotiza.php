@@ -398,7 +398,7 @@ $correo .= '
                                                     '.$v->titulo.'
                                                  </td>
                                                  <td style="padding: 5px; text-align: right;">
-                                                    '.number_format($precio, 2, ',', '.').'
+                                                    '.number_format($v->precio, 2, ',', '.').'
                                                  </td>
                                                  <td style="padding: 5px; text-align: center;">
                                                      '.$v->cantidad.'
