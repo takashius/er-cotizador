@@ -13,12 +13,13 @@
  */
 
     global $wpdb;
-    $sql_clientes = "SELECT `wp_posts`.`ID`, 
-    `wp_posts`.`post_title`, 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'nombre') as 'nombre', 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'apellido') as 'apellido', 
-    (SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'cedula-rif') as 'cedula-rif'
-    FROM `wp_posts`
+    $prefix = $wpdb->prefix;
+    $sql_clientes = "SELECT `".$prefix."posts`.`ID`, 
+    `".$prefix."posts`.`post_title`, 
+    (SELECT `meta_value` FROM `".$prefix."postmeta` WHERE `".$prefix."postmeta`.`post_id` = `".$prefix."posts`.`ID` AND `".$prefix."postmeta`.`meta_key` = 'nombre') as 'nombre', 
+    (SELECT `meta_value` FROM `".$prefix."postmeta` WHERE `".$prefix."postmeta`.`post_id` = `".$prefix."posts`.`ID` AND `".$prefix."postmeta`.`meta_key` = 'apellido') as 'apellido', 
+    (SELECT `meta_value` FROM `".$prefix."postmeta` WHERE `".$prefix."postmeta`.`post_id` = `".$prefix."posts`.`ID` AND `".$prefix."postmeta`.`meta_key` = 'cedula-rif') as 'cedula-rif'
+    FROM `".$prefix."posts`
     WHERE 
         `post_type` = 'er-clientes' AND 
         `post_status` = 'publish'
@@ -27,13 +28,13 @@
     $clientes = $wpdb->get_results($query_clientes);
 
     $sql_cotizaciones = "SELECT 
-		`wp_er_cotizaciones`.*, 
-		`wp_posts`.`post_title` as 'title', 
-		(SELECT `meta_value` FROM `wp_postmeta` WHERE `wp_postmeta`.`post_id` = `wp_posts`.`ID` AND `wp_postmeta`.`meta_key` = 'cedula-rif') as 'cedulaRif'
+		`".$prefix."er_cotizaciones`.*, 
+		`".$prefix."posts`.`post_title` as 'title', 
+		(SELECT `meta_value` FROM `".$prefix."postmeta` WHERE `".$prefix."postmeta`.`post_id` = `".$prefix."posts`.`ID` AND `".$prefix."postmeta`.`meta_key` = 'cedula-rif') as 'cedulaRif'
 	FROM 
-		`wp_er_cotizaciones`, `wp_posts` 
+		`".$prefix."er_cotizaciones`, `".$prefix."posts` 
 	WHERE 
-        `wp_er_cotizaciones`.`cliente_id` = `wp_posts`.`ID`";
+        `".$prefix."er_cotizaciones`.`cliente_id` = `".$prefix."posts`.`ID`";
     $query_cotizaciones = $wpdb->prepare($sql_cotizaciones);
     $cotizaciones = $wpdb->get_results($query_cotizaciones);
 ?>
