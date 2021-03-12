@@ -74,21 +74,21 @@
         function Header()
         {
             if($this->cabecera){
-                // Logo
-                $this->Image($this->options['er_logo'],10,8,33);
+                // Logo Default (10, 8, 33)
+                $this->Image($this->options['er_logo'],$this->options['er_logo_pos_x'],$this->options['er_logo_pos_y'],$this->options['er_logo_tam']);
                 // Marca de Agua
                 $this->SetAlpha(0.2);
-                $this->Image($this->options['er_logo'],40,140,110);
+                $this->Image($this->options['er_logo'],$this->options['er_banner_pos_x'],$this->options['er_banner_pos_y'],$this->options['er_banner_tam']);
                 $this->SetAlpha(1);
                 // Arial bold 15
                 $this->SetFont('times','B',12);
                 $this->Ln(12);
                 $this->SetX(10);
                 // Titulo
-                $this->Cell(140,6, $this->options['er_name'],0,1,'L');
+                $this->Cell(140,6, utf8_decode($this->options['er_name']),0,1,'L');
                 $this->SetFont('times','',8);
-                $this->Cell(140,3,$this->options['er_dir_ln_1'],0,1,'L');
-                $this->Cell(140,3,$this->options['er_dir_ln_2'],0,1,'L');
+                $this->Cell(140,3,utf8_decode($this->options['er_dir_ln_1']),0,1,'L');
+                $this->Cell(140,3,utf8_decode($this->options['er_dir_ln_2']),0,1,'L');
                 $this->SetFont('times','B',8);
                 $this->Cell(140,4,$this->options['er_tel'],0,1,'L');
                 // Salto de linea

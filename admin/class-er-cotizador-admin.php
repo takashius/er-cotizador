@@ -248,6 +248,38 @@ class Er_Cotizador_Admin {
 		);
 	
 		add_settings_field( 
+			'er_logo_pos', 
+			__( 'Logo posicion', 'er-cotizador' ), 
+			array( $this, 'er_logo_posicion_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_logo_tam', 
+			__( 'Logo tamaño (%)', 'er-cotizador' ), 
+			array( $this, 'er_logo_tam_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_banner_pos', 
+			__( 'Posicion Marca de agua', 'er-cotizador' ), 
+			array( $this, 'er_banner_posicion_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
+			'er_banner_tam', 
+			__( 'Tamaño Marca de agua (%)', 'er-cotizador' ), 
+			array( $this, 'er_banner_tam_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
 			'er_banner', 
 			__( 'Banner para correo', 'er-cotizador' ), 
 			array( $this, 'er_banner_render' ), 
@@ -363,6 +395,44 @@ class Er_Cotizador_Admin {
 		<input id="er_logo" type="hidden" name="er_settings[er_logo]" value="<?php echo $options['er_logo']; ?>" />
 		<img src="<?php echo $options['er_logo']?>" width="100">
 		<input type="button" class="button-primary upload_image_button" rel="er_logo" value="<?php echo __( 'Seleccionar imagen', 'er-cotizador' ) ?>" />
+		<?php
+	
+	}
+	
+	function er_logo_posicion_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' placeholder="Pos X" name='er_settings[er_logo_pos_x]' value='<?php echo $options['er_logo_pos_x']?$options['er_logo_pos_x']:"10"; ?>'>
+		<input type='text' placeholder="Pos Y" name='er_settings[er_logo_pos_y]' value='<?php echo $options['er_logo_pos_y']?$options['er_logo_pos_y']:"8"; ?>'>
+		<?php
+	
+	}
+	
+	function er_logo_tam_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' placeholder="" class="regular-text" name='er_settings[er_logo_tam]' value='<?php echo $options['er_logo_tam']?$options['er_logo_tam']:"33"; ?>'>
+		<?php
+	
+	}
+	
+	function er_banner_posicion_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' placeholder="Pos X" name='er_settings[er_banner_pos_x]' value='<?php echo $options['er_banner_pos_x']?$options['er_banner_pos_x']:"40"; ?>'>
+		<input type='text' placeholder="Pos Y" name='er_settings[er_banner_pos_y]' value='<?php echo $options['er_banner_pos_y']?$options['er_banner_pos_y']:"140"; ?>'>
+		<?php
+	
+	}
+	
+	function er_banner_tam_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' placeholder="" class="regular-text" name='er_settings[er_banner_tam]' value='<?php echo $options['er_banner_tam']?$options['er_banner_tam']:"110"; ?>'>
 		<?php
 	
 	}
