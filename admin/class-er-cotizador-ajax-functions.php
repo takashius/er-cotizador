@@ -396,6 +396,6 @@ class Er_Cotizador_Ajax_Functions {
 		
         $headers[] = 'Bcc: '.$correoCopia;
 		
-		wp_mail($cotiza->correo, "Cotizacion en La Guachafa", $correo, $headers);
+		wp_mail($cotiza->correo, "Cotizacion en ".$options['er_shortname'], $correo, $headers);
 	}
 }

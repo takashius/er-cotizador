@@ -200,6 +200,14 @@ class Er_Cotizador_Admin {
 		);
 	
 		add_settings_field( 
+			'er_shortname', 
+			__( 'Nombre corto', 'er-cotizador' ), 
+			array( $this, 'er_shortname_render' ), 
+			'erCotizador', 
+			'er_erCotizador_section' 
+		);
+	
+		add_settings_field( 
 			'er_rif', 
 			__( 'RIF de la empresa', 'er-cotizador' ), 
 			array( $this, 'er_rif_render' ), 
@@ -333,6 +341,15 @@ class Er_Cotizador_Admin {
 		$options = get_option( 'er_settings' );
 		?>
 		<input type='text' class="regular-text" name='er_settings[er_name]' value='<?php echo $options['er_name']; ?>'>
+		<?php
+	
+	}
+
+	function er_shortname_render(  ) { 
+
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' class="regular-text" name='er_settings[er_shortname]' value='<?php echo $options['er_shortname']; ?>'>
 		<?php
 	
 	}
