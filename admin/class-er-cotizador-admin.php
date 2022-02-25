@@ -200,14 +200,6 @@ class Er_Cotizador_Admin {
 		);
 	
 		add_settings_field( 
-			'er_shortname', 
-			__( 'Nombre corto', 'er-cotizador' ), 
-			array( $this, 'er_shortname_render' ), 
-			'erCotizador', 
-			'er_erCotizador_section' 
-		);
-	
-		add_settings_field( 
 			'er_rif', 
 			__( 'RIF de la empresa', 'er-cotizador' ), 
 			array( $this, 'er_rif_render' ), 
@@ -304,6 +296,22 @@ class Er_Cotizador_Admin {
 		);
 	
 		add_settings_field( 
+			'er_moneda', 
+			__( 'Simbolo de moneda', 'er-cotizador' ), 
+			array( $this, 'er_moneda_render' ), 
+			'erCotizador', 
+			'er_erCotizador_money_section' 
+		);
+	
+		add_settings_field( 
+			'er_costo_pxp', 
+			__( 'Costo por persona', 'er-cotizador' ), 
+			array( $this, 'er_costo_pxp_render' ), 
+			'erCotizador', 
+			'er_erCotizador_money_section' 
+		);
+	
+		add_settings_field( 
 			'er_color_ppl', 
 			__( 'Color Principal', 'er-cotizador' ), 
 			array( $this, 'er_color_ppl_render' ), 
@@ -341,15 +349,6 @@ class Er_Cotizador_Admin {
 		$options = get_option( 'er_settings' );
 		?>
 		<input type='text' class="regular-text" name='er_settings[er_name]' value='<?php echo $options['er_name']; ?>'>
-		<?php
-	
-	}
-
-	function er_shortname_render(  ) { 
-
-		$options = get_option( 'er_settings' );
-		?>
-		<input type='text' class="regular-text" name='er_settings[er_shortname]' value='<?php echo $options['er_shortname']; ?>'>
 		<?php
 	
 	}
@@ -466,12 +465,32 @@ class Er_Cotizador_Admin {
 	
 	}
 	
-	
 	function er_iva_render(  ) { 
 	
 		$options = get_option( 'er_settings' );
 		?>
 		<input type='text' class="regular-text" name='er_settings[er_iva]' value='<?php echo $options['er_iva']; ?>'>
+		<?php
+	
+	}
+	
+	function er_moneda_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<input type='text' class="regular-text" name='er_settings[er_moneda]' value='<?php echo $options['er_moneda']?$options['er_moneda']:'$'; ?>'>
+		<?php
+	
+	}
+	
+	function er_costo_pxp_render(  ) { 
+	
+		$options = get_option( 'er_settings' );
+		?>
+		<span class="switch-button">
+            <input type="checkbox" name="er_settings[er_costo_pxp]" id="switch-label" class="switch-button__checkbox" <?php echo $options['er_costo_pxp']?'checked="true"':''; ?>>
+            <label for="switch-label" class="switch-button__label"></label>
+        </span>
 		<?php
 	
 	}

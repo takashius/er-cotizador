@@ -16,6 +16,7 @@
 	$id = $_GET['id'];
 	$options = get_option( 'er_settings' );
 	$ivaVal = $options['er_iva'];
+	$costoPxp = $options['er_costo_pxp'];
 	
 	$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
 	$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
@@ -82,7 +83,7 @@
   </ol>
 </nav>
 <div class="container" id="idCotiza" itemid="<?php echo $cotiza->ID ?>">
-    <div class="card-body" id="ivaConfig" val="<?php echo $ivaVal?>">
+    <div class="card-body" id="ivaConfig" val="<?php echo $ivaVal?>" rel="<?php echo "$cotiza->invitados" ?>">
 		<div class="row">
 			<div class="col">
 				<h1><?php echo __( 'Editar cotizacion', 'er-cotizador' ); ?></h1>
@@ -244,6 +245,12 @@
                             <td class="right"><?php echo __( 'Total:', 'er-cotizador' ); ?></td>
                             <th class="right strong" id="totalPre"></th>
                         </tr>
+                        <?php if($costoPxp){ ?>
+                        <tr>
+                            <td class="right"><?php echo __( 'Precio por Persona:', 'er-cotizador' ); ?></td>
+                            <th class="right strong" id="PrexPer"></th>
+                        </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -300,6 +307,10 @@
                     <div class="form-group">
                         <label for="cotiza_numfact" class="col-form-label"><?php echo __( 'Numero de factura', 'er-cotizador' ); ?></label>
                         <input type="text" class="form-control" id="cotiza_numfact" value="<?php echo $cotiza->factura ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cotiza_invitados" class="col-form-label"><?php echo __( 'Cantidad de Invitados', 'er-cotizador' ); ?></label>
+                        <input type="text" class="form-control" id="cotiza_invitados" value="<?php echo $cotiza->invitados ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="cotiza_coment" class="col-form-label"><?php echo __( 'Comentarios:', 'er-cotizador' ); ?></label>

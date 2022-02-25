@@ -3,6 +3,7 @@ $color['ppl'] = $options['er_color_ppl']?$options['er_color_ppl']:'#008080';
 $color['sec'] = $options['er_color_sec']?$options['er_color_sec']:'#8CF7FC';
 $color['bg'] = $options['er_color_bg']?$options['er_color_bg']:'#2a2a2a';
 $color['title'] = $options['er_color_title']?$options['er_color_title']:'#ffffff';
+$moneda = $options['er_moneda']?$options['er_moneda']:'$';
 $correo = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -416,7 +417,7 @@ $correo .= '
                                                      Base Imponible
                                                  </td>
                                                  <td style="padding: 5px; text-align: right;">
-                                                     $ '.number_format($baseImponible, 2, ',', '.').'
+                                                     '.$moneda.' '.number_format($baseImponible, 2, ',', '.').'
                                                  </td>
                                              </tr>';
                                              $correo .= '<tr bgcolor="#F0F0F0" style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #4f5458; text-align:left; line-height: 20px;">
@@ -424,7 +425,7 @@ $correo .= '
                                                      Subtotal
                                                  </td>
                                                  <td style="padding: 5px; text-align: right;">
-                                                     $ '.number_format($totalGrl, 2, ',', '.').'
+                                                     '.$moneda.' '.number_format($totalGrl, 2, ',', '.').'
                                                  </td>
                                              </tr>';
                                              $correo .= '<tr bgcolor="#F0F0F0" style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #4f5458; text-align:left; line-height: 20px;">
@@ -432,7 +433,7 @@ $correo .= '
                                                      Iva
                                                  </td>
                                                  <td style="padding: 5px; text-align: right;">
-                                                     $ '.number_format($ivaTtl, 2, ',', '.').'
+                                                     '.$moneda.' '.number_format($ivaTtl, 2, ',', '.').'
                                                  </td>
                                              </tr>';
                                              if($cotiza->pordesc > 0){
@@ -443,7 +444,7 @@ $correo .= '
                                                      Descuento
                                                  </td>
                                                  <td style="padding: 5px; text-align: right;">
-                                                     $ '.number_format($descuento, 2, ',', '.').'
+                                                     '.$moneda.' '.number_format($descuento, 2, ',', '.').'
                                                  </td>
                                              </tr>';
                                             }
@@ -453,10 +454,21 @@ $correo .= '
                                                      Total
                                                  </td>
                                                  <td style="padding: 5px; text-align: right;">
-                                                     $ '.number_format($precioTtl, 2, ',', '.').'
+                                                     '.$moneda.' '.number_format($precioTtl, 2, ',', '.').'
                                                  </td>
-                                             </tr>
-                                             <!-- end of content -->
+                                             </tr>';
+                                             if($cotiza->invitados > 0 && $options['er_costo_pxp']){
+                                                 $preInvitado = $precioTtl / $cotiza->invitados;
+                                                 $correo .= '<tr bgcolor="#F0F0F0" style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: '.$color['ppl'].'; text-align:left; line-height: 20px;">
+                                                 <td colspan="4" style="padding: 5px; text-align: right;">
+                                                     Precio por Invitado
+                                                 </td>
+                                                 <td style="padding: 5px; text-align: right;">
+                                                     '.$moneda.' '.number_format($preInvitado, 2, ',', '.').'
+                                                 </td>
+                                             </tr>';
+                                             }
+                                         $correo .= '<!-- end of content -->
                                          </tbody>
                                          
                                      </table>

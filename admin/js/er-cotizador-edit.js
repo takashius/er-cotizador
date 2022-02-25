@@ -2,6 +2,7 @@ $(document).ready(function() {
     const idCotiza = $("#idCotiza").attr('itemid');
     const urlBase = $('#url_site').attr('item_ref');
     const ivaConfig = $('#ivaConfig').attr('val');
+    let invitados = $('#ivaConfig').attr('rel');
 
     $('#editarCotizacion').on('shown.bs.modal', function () {
 		$('#newCotiza_title').trigger('focus')
@@ -18,6 +19,7 @@ $(document).ready(function() {
 		const coment = $('#cotiza_coment').val();
 		const status = $('#cotiza_status').val();
         const factura = $('#cotiza_numfact').val() || 0;
+        const invited = $('#cotiza_invitados').val() || 0;
         
         let error = false;
 		const data = {
@@ -27,7 +29,8 @@ $(document).ready(function() {
 			cliente: cliente,
 			coment: coment,
 			status: status,
-			factura: factura
+			factura: factura,
+			invitados: invited
 		};
 		if(title === null){
 			$('#cotiza_title_error').fadeIn();
@@ -41,6 +44,9 @@ $(document).ready(function() {
 			$('#loader_new_cotiza').attr('style', 'visibility: visible;');
 			jQuery.post(ajaxurl, data, function(response) {
                 $('#loader_new_cotiza').attr('style', 'visibility: hidden;');
+                $('#ivaConfig').attr('rel', invited);
+                invitados = invited;
+                calcular_total();
                 $('#editarCotizacion').modal('hide');
 			}).fail(function(error) {
 				console.log( error );
@@ -328,6 +334,7 @@ $(document).ready(function() {
         $('#subdesc').html(number_format($ttldesc, 2, ',', '.'));
         $('#ivaPre').html(number_format($iva, 2, ',', '.'));
         $('#totalPre').html(number_format($total, 2, ',', '.'));
+        $('#PrexPer').html(number_format($total/invitados, 2, ',', '.'));
         $('#gananciaPre').html(number_format($subtotal-$proveedor, 2, ',', '.'));
     }
     
@@ -467,4 +474,4 @@ function notificacion(texto, tipo){
             }]
     });
     return false;
-}
+};

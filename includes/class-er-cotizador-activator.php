@@ -40,6 +40,7 @@ class Er_Cotizador_Activator {
         .'`cliente_id` bigint(20) NOT NULL,'
         .'`comentarios` text NOT NULL,'
 		.'`factura` int NOT NULL DEFAULT 0,'
+		.'`invitados` int NOT NULL DEFAULT 0,'
 		.'`status` tinyint NOT NULL DEFAULT 1,'
 		.'`total` double NULL,'
 		.'`pordesc` int NULL,'
