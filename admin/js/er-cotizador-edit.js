@@ -20,6 +20,8 @@ $(document).ready(function() {
 		const status = $('#cotiza_status').val();
         const factura = $('#cotiza_numfact').val() || 0;
         const invited = $('#cotiza_invitados').val() || 0;
+        const fechafactura = $('#cotiza_fecha').val() || 0;
+        const tasa = $('#cotiza_tasa').val() || 0;
         
         let error = false;
 		const data = {
@@ -30,7 +32,9 @@ $(document).ready(function() {
 			coment: coment,
 			status: status,
 			factura: factura,
-			invitados: invited
+			invitados: invited,
+			fechafactura: fechafactura,
+			tasa: tasa
 		};
 		if(title === null){
 			$('#cotiza_title_error').fadeIn();
@@ -45,6 +49,7 @@ $(document).ready(function() {
 			jQuery.post(ajaxurl, data, function(response) {
                 $('#loader_new_cotiza').attr('style', 'visibility: hidden;');
                 $('#ivaConfig').attr('rel', invited);
+                $('#tasaConfig').attr('rel', tasa);
                 invitados = invited;
                 calcular_total();
                 $('#editarCotizacion').modal('hide');
@@ -301,8 +306,8 @@ $(document).ready(function() {
         var $proveedor = 0;
         var $ttldesc = 0;
 		var calcBsS = $("#tipoMoneda").attr('rel');
-		var tasa = parseInt($("#tasaActual").attr('rel'));
         var $descuento = parseInt($('#descuento').val());
+        var $tasa = parseFloat($('#cotiza_tasa').val()) || 0;
         valorIva = ivaConfig/100;
         
         $('.elementos').each(function(){
@@ -336,6 +341,8 @@ $(document).ready(function() {
         $('#totalPre').html(number_format($total, 2, ',', '.'));
         $('#PrexPer').html(number_format($total/invitados, 2, ',', '.'));
         $('#gananciaPre').html(number_format($subtotal-$proveedor, 2, ',', '.'));
+        $('#tasaBcv').html(number_format($tasa, 2, ',', '.'));
+        $('#montoBs').html(number_format(parseFloat($tasa*$total), 2, ',', '.'));
     }
     
     function quitar_producto(obj){

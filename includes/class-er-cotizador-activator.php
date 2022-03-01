@@ -41,6 +41,8 @@ class Er_Cotizador_Activator {
         .'`comentarios` text NOT NULL,'
 		.'`factura` int NOT NULL DEFAULT 0,'
 		.'`invitados` int NOT NULL DEFAULT 0,'
+        .'`tasa` float(3,2) NOT NULL DEFAULT 0,'
+        .'`fechafactura` varchar(60) NOT NULL,'
 		.'`status` tinyint NOT NULL DEFAULT 1,'
 		.'`total` double NULL,'
 		.'`pordesc` int NULL,'

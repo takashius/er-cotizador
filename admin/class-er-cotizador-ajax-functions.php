@@ -88,6 +88,8 @@ class Er_Cotizador_Ajax_Functions {
 		$status = $_POST['status'];
 		$factura = $_POST['factura'];
 		$invitados = $_POST['invitados'];
+		$fechafactura = $_POST['fechafactura'];
+		$tasa = $_POST['tasa'];
 		
 		$array = array(
 			"titulo" => $title,
@@ -95,7 +97,9 @@ class Er_Cotizador_Ajax_Functions {
 			"comentarios" => $coment,
 			"status" => $status,
 			"factura" => $factura,
-			"invitados" => $invitados
+			"invitados" => $invitados,
+			"fechafactura" => $fechafactura,
+			"tasa" => $tasa
 		);
 
 		$where = array(
@@ -246,7 +250,7 @@ class Er_Cotizador_Ajax_Functions {
 		$pdf->SetXY(13, 59); $pdf->Cell(60,5,'RIF: '.$cotiza->cedulaRif);
 		$pdf->Line(11, 64.4, 134, 64.4);
 		$pdf->Line(60, 58.2, 60, 64.4); //linea vertical rif-lugar
-		$pdf->SetXY(60, 59); $pdf->Cell(60,5,utf8_decode('Lugar y Fecha de Emisión: '.$newDate));
+		$pdf->SetXY(60, 59); $pdf->Cell(60,5,utf8_decode('Lugar y Fecha de Emisión: '.$cotiza->fechafactura));
 	//	$pdf->SetXY(60, 59); $pdf->Cell(60,5,utf8_decode('Lugar y Fecha de Emisión: Caracas 28/12/2020'));
 		$pdf->Line(11, 70.6, 134, 70.6);
 		$pdf->SetXY(13, 65); $pdf->Cell(60,5,utf8_decode('Dirección Fiscal: '.$cotiza->direccion));
@@ -271,19 +275,19 @@ class Er_Cotizador_Ajax_Functions {
 		$pdf->SetXY(169, 81); $pdf->Cell(29,5,utf8_decode('TOTAL '.$moneda),0,0,'C');
 
 		if($cotiza->pordesc > 0){
-            $pdf->Line(169, 80, 169, 264);
-            $pdf->Line(198, 85, 198, 264);
-            $pdf->Line(120, 252, 198, 252);
-            $pdf->Line(120, 258, 198, 258);
-            $pdf->Line(169, 264, 198, 264);
-            $pdf->Line(120, 252, 120, 258);
+            $pdf->Line(169, 80, 169, 270);//LINEA VERTICAL IZQUIERDA
+            $pdf->Line(198, 85, 198, 270);//LINEA VERTICAL DERECHA
+            $pdf->Line(120, 252, 198, 252);//LINEA HORIZONTAL TOP IVA (LARGA)
+            $pdf->Line(120, 258, 198, 258);//LINEA HORIZONTAL BASE IVA (LARGA)
+            $pdf->Line(169, 270, 198, 270);//LINEA HORIZONTAL BASE TOTAL A PAGAR BS
+            $pdf->Line(120, 252, 120, 258);//LINEA VERTICAL IZQUIERDA TEXTO IVA 
         }else{
-            $pdf->Line(169, 80, 169, 258);
-            $pdf->Line(198, 85, 198, 258);
-            $pdf->Line(120, 246, 198, 246);
-            $pdf->Line(120, 252, 198, 252);
-            $pdf->Line(169, 258, 198, 258);
-            $pdf->Line(120, 246, 120, 252);
+            $pdf->Line(169, 80, 169, 264);//LINEA VERTICAL IZQUIERDA
+            $pdf->Line(198, 85, 198, 264);//LINEA VERTICAL DERECHA
+            $pdf->Line(120, 246, 198, 246);//LINEA HORIZONTAL TOP IVA (LARGA)
+            $pdf->Line(120, 252, 198, 252);//LINEA HORIZONTAL BASE IVA (LARGA)
+            $pdf->Line(169, 264, 198, 264);//LINEA HORIZONTAL BASE TOTAL A PAGAR BS
+            $pdf->Line(120, 246, 120, 252);//LINEA VERTICAL IZQUIERDA TEXTO IVA 
 		}
 		$pdf->SetXY(10, 85);
 		$pdf->Cell(60,7,'',0,1,'L');
@@ -344,6 +348,8 @@ class Er_Cotizador_Ajax_Functions {
 			$pdf->SetFont('Arial','b',8);
 			$pdf->SetXY(130, 259); $pdf->Cell(39,5,'TOTAL A PAGAR '.$moneda,0,0,'R');
 			$pdf->SetXY(169, 259); $pdf->Cell(28,5,number_format($totaltotal, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(120, 265); $pdf->Cell(49,5,'TOTAL Bs SEGUN TASA '.number_format($cotiza->tasa, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(169, 265); $pdf->Cell(28,5,number_format($totaltotal*$cotiza->tasa, 2, ',', '.'),0,0,'R');
 		}else{
 			$pdf->SetXY(140, 241); $pdf->Cell(28,5,'SUB-TOTAL '.$moneda,0,0,'R');
 			$pdf->SetXY(169, 241); $pdf->Cell(28,5,number_format($subtotal, 2, ',', '.'),0,0,'R');
@@ -352,6 +358,8 @@ class Er_Cotizador_Ajax_Functions {
 			$pdf->SetFont('Arial','b',8);
 			$pdf->SetXY(130, 253); $pdf->Cell(39,5,'TOTAL A PAGAR '.$moneda,0,0,'R');
 			$pdf->SetXY(169, 253); $pdf->Cell(28,5,number_format($totaltotal, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(120, 259); $pdf->Cell(49,5,'TOTAL Bs SEGUN TASA '.number_format($cotiza->tasa, 2, ',', '.'),0,0,'R');
+			$pdf->SetXY(169, 259); $pdf->Cell(28,5,number_format($totaltotal*$cotiza->tasa, 2, ',', '.'),0,0,'R');
 		}
 
         $pdf->Output("I", "reporte.pdf");

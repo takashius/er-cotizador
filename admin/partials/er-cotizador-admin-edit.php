@@ -84,7 +84,7 @@
 </nav>
 <div class="container" id="idCotiza" itemid="<?php echo $cotiza->ID ?>">
     <div class="card-body" id="ivaConfig" val="<?php echo $ivaVal?>" rel="<?php echo "$cotiza->invitados" ?>">
-		<div class="row">
+		<div class="row" id="tasaConfig" rel="<?php echo $cotiza->tasa ?>">
 			<div class="col">
 				<h1><?php echo __( 'Editar cotizacion', 'er-cotizador' ); ?></h1>
 			</div>
@@ -245,6 +245,14 @@
                             <td class="right"><?php echo __( 'Total:', 'er-cotizador' ); ?></td>
                             <th class="right strong" id="totalPre"></th>
                         </tr>
+                        <tr>
+                            <td class="right"><?php echo __( 'Tasa del día:', 'er-cotizador' ); ?></td>
+                            <th class="right strong" id="tasaBcv"></th>
+                        </tr>
+                        <tr>
+                            <td class="right"><?php echo __( 'Monto en Bs:', 'er-cotizador' ); ?></td>
+                            <th class="right strong" id="montoBs"></th>
+                        </tr>
                         <?php if($costoPxp){ ?>
                         <tr>
                             <td class="right"><?php echo __( 'Precio por Persona:', 'er-cotizador' ); ?></td>
@@ -311,6 +319,14 @@
                     <div class="form-group">
                         <label for="cotiza_invitados" class="col-form-label"><?php echo __( 'Cantidad de Invitados', 'er-cotizador' ); ?></label>
                         <input type="text" class="form-control" id="cotiza_invitados" value="<?php echo $cotiza->invitados ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cotiza_fecha" class="col-form-label"><?php echo __( 'Fecha de Factura', 'er-cotizador' ); ?></label>
+                        <input type="text" class="form-control" id="cotiza_fecha" value="<?php echo $cotiza->fechafactura ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cotiza_tasa" class="col-form-label"><?php echo __( 'Tasa del dia (BCV)', 'er-cotizador' ); ?></label>
+                        <input type="text" class="form-control" id="cotiza_tasa" value="<?php echo $cotiza->tasa ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="cotiza_coment" class="col-form-label"><?php echo __( 'Comentarios:', 'er-cotizador' ); ?></label>
