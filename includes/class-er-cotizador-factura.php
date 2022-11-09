@@ -99,7 +99,7 @@
         function nota(){
             $this->SetFont('ARIAL','',9);
             $this->SetXY(140, 30);
-            $this->Cell(60,7,'PRESUPUESTO',0,1,'L');
+            $this->Cell(60,7,'NOTA DE ENTREGA',0,1,'L');
             $this->SetX(140);
             $this->Cell(60,7, __( 'RIF ', 'er-cotizador' ).$this->options['er_rif'],0,1,'L');
             $this->SetFont('Arial','',8);

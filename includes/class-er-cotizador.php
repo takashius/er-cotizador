@@ -51,7 +51,7 @@ class Er_Cotizador {
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    2.0.0
 	 * @access   protected
 	 * @var      string    $version    The current version of the plugin.
 	 */
@@ -117,17 +117,7 @@ class Er_Cotizador {
 		/**
 		 * Clase responsable del custom post type de cliente.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-er-cotizador-cpt-clientes.php';
-		
-		/**
-		 * Clase responsable del custom post type de cliente.
-		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-er-cotizador-ajax-functions.php';
-		
-		/**
-		 * Clase responsable del custom post type de producto.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-er-cotizador-cpt-productos.php';
 
 		$this->loader = new Er_Cotizador_Loader();
 
@@ -167,43 +157,7 @@ class Er_Cotizador {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'er_settings_init' );
 		$this->loader->add_filter( 'wp_mail_content_type', $this, 'tipo_de_contenido_html' );
 
-		$this->define_clientes_hooks();
-		$this->define_productos_hooks();
 		$this->define_ajax_functions_hooks();
-	}
-	
-
-	/**
-	 * Hoocks relacionados con el CPT de Clientes
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_clientes_hooks() {
-		$ctp_cliente = new Er_Cotizador_Clientes( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_action( 'init', $ctp_cliente, 'clientes_post_type' );
-		$this->loader->add_action( 'add_meta_boxes', $ctp_cliente, 'clientes_data' );
-		$this->loader->add_action( 'save_post', $ctp_cliente, 'er_clientes_save_meta_box' );
-		$this->loader->add_action( 'manage_er-clientes_posts_custom_column', $ctp_cliente, 'list_clientes_posts_columns', 10, 2 );
-
-		$this->loader->add_filter( 'manage_er-clientes_posts_columns', $ctp_cliente, 'set_clientes_columns' );
-		
-	}
-
-	/**
-	 * Hoocks relacionados con el CPT de Productos
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_productos_hooks() {
-		$ctp_producto = new Er_Cotizador_Productos( $this->get_plugin_name(), $this->get_version() );
-		
-		$this->loader->add_action( 'init', $ctp_producto, 'productos_post_type' );
-		$this->loader->add_action( 'add_meta_boxes', $ctp_producto, 'productos_data' );
-		$this->loader->add_action( 'save_post', $ctp_producto, 'er_productos_save_meta_box' );
-		$this->loader->add_action( 'init', $ctp_producto, 'crear_productos_taxonomies' );
 	}
 
 	/**
@@ -222,6 +176,10 @@ class Er_Cotizador {
 		$this->loader->add_action( 'wp_ajax_send_cotiza', $ajax_functions, 'send_cotiza' );
 		$this->loader->add_action( 'wp_ajax_delete_prod', $ajax_functions, 'delete_prod' );
 		$this->loader->add_action( 'wp_ajax_delete_cotiza', $ajax_functions, 'delete_cotiza' );
+		$this->loader->add_action( 'wp_ajax_save_cliente', $ajax_functions, 'save_cliente' );
+		$this->loader->add_action( 'wp_ajax_delete_cliente', $ajax_functions, 'delete_cliente' );
+		$this->loader->add_action( 'wp_ajax_save_producto', $ajax_functions, 'save_producto' );
+		$this->loader->add_action( 'wp_ajax_delete_producto', $ajax_functions, 'delete_producto' );
 	}
 
 	/**

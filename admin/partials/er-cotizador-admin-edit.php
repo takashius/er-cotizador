@@ -20,50 +20,26 @@
 	
 	$tablaCotiza = $wpdb->prefix . "er_cotizaciones";
 	$tablaCotizaProd = $wpdb->prefix . "er_cotiza_prods";
-	$tablaPosts = $wpdb->prefix . "posts";
-	$tablaPostMeta = $wpdb->prefix . "postmeta";
+	$tablaClientes = $wpdb->prefix . "er_cotiza_clientes";
+	$tablaProductos = $wpdb->prefix . "er_productos";
 
 	$sql = "SELECT 
 		`".$tablaCotiza."`.*, 
-		`".$tablaPosts."`.`post_title`, 
-		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'nombre') as 'nombre', 
-		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'apellido') as 'apellido', 
-		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'cedula-rif') as 'cedulaRif', 
-		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'correo') as 'correo', 
-		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'telefono') as 'telefono', 
-		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'ciudad') as 'ciudad', 
-		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'direccion') as 'direccion', 
-		(SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'direccion-cont') as 'direccionCont'
+		`".$tablaClientes."`.`titulo` as `title`, 
+		`".$tablaClientes."`.*
 	FROM 
-		`".$tablaCotiza."`, `".$tablaPosts."` 
+		`".$tablaCotiza."`, `".$tablaClientes."` 
 	WHERE `".$tablaCotiza."`.`ID` = '$id' 
-		AND `".$tablaCotiza."`.`cliente_id` = `".$tablaPosts."`.`ID`";
+		AND `".$tablaCotiza."`.`cliente_id` = `".$tablaClientes."`.`ID`";
 	$query = $wpdb->prepare($sql); 
 	$cotizacion = $wpdb->get_results($query);
 	$cotiza = $cotizacion[0];
 
-	$sql_clientes = "SELECT `".$tablaPosts."`.`ID`, 
-    `".$tablaPosts."`.`post_title`, 
-    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'nombre') as 'nombre', 
-    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'apellido') as 'apellido'
-    FROM `".$tablaPosts."`
-    WHERE 
-        `post_type` = 'er-clientes' AND 
-        `post_status` = 'publish'
-    ORDER BY `post_title`";
+	$sql_clientes = "SELECT `ID`, `titulo`, `nombre`, `apellido` FROM `".$tablaClientes."` WHERE `status` = 1";
     $query_clientes = $wpdb->prepare($sql_clientes);
     $clientes = $wpdb->get_results($query_clientes);
 
-	$sql_productos = "SELECT `".$tablaPosts."`.`ID`, 
-    `".$tablaPosts."`.`post_title` as 'title', 
-    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'prodPrecio') as 'precio', 
-    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'prodVisible') as 'visible', 
-    (SELECT `meta_value` FROM `".$tablaPostMeta."` WHERE `".$tablaPostMeta."`.`post_id` = `".$tablaPosts."`.`ID` AND `".$tablaPostMeta."`.`meta_key` = 'prodIva') as 'iva'
-    FROM `".$tablaPosts."`
-    WHERE 
-        `post_type` = 'er-productos' AND 
-        `post_status` = 'publish'
-    ORDER BY `post_title`";
+	$sql_productos = "SELECT `ID`, `titulo`, `precio`, `iva` FROM `".$tablaProductos."` WHERE `status` = 1";
     $query_productos = $wpdb->prepare($sql_productos);
 	$productos = $wpdb->get_results($query_productos);
 	
@@ -98,7 +74,7 @@
 	<div class="row">
 		<div class="col">
 			<div class="card">
-				<h5 class="card-header"><?php echo $cotiza->post_title ?></h5>
+				<h5 class="card-header"><?php echo $cotiza->title ?></h5>
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">Cedula/Rif: <?php echo $cotiza->cedulaRif ?></li>
 					<li class="list-group-item">Telefono: <?php echo $cotiza->telefono ?></li>
@@ -150,7 +126,7 @@
                         <span class="prodSelect" style="display:none !important;">
                             <select class="general" style="width:100%;">
 								<?php foreach($productos as $producto){ ?>
-									<option id="<?php echo $producto->ID?>" itemprop="<?php echo $producto->precio?>" itemtype="<?php echo $producto->iva?>"><?php echo $producto->title?></option>
+									<option id="<?php echo $producto->ID?>" itemprop="<?php echo $producto->precio?>" itemtype="<?php echo $producto->iva?>"><?php echo $producto->titulo?></option>
 								<?php }?>
                             </select>
                         </span>
@@ -181,7 +157,7 @@
                         <span class="prodSelect">
                             <select class="general" style="width:100%;">
 								<?php foreach($productos as $producto){ ?>
-									<option id="<?php echo $producto->ID?>" itemprop="<?php echo $producto->precio?>" itemtype="<?php echo $producto->iva?>"><?php echo $producto->title?></option>
+									<option id="<?php echo $producto->ID?>" itemprop="<?php echo $producto->precio?>" itemtype="<?php echo $producto->iva?>"><?php echo $producto->titulo?></option>
 								<?php }?>
                             </select>
                         </span>
@@ -298,7 +274,7 @@
 								}else{
 									$selected = "";
 								}
-                                echo '<option value="'.$cliente->ID.'" '.$selected.'>('.$cliente->post_title.') '.$cliente->nombre.' '.$cliente->apellido.'</option>';
+                                echo '<option value="'.$cliente->ID.'" '.$selected.'>('.$cliente->titulo.') '.$cliente->nombre.' '.$cliente->apellido.'</option>';
                             }
                             ?>
                         </select>

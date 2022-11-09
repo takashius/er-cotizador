@@ -74,13 +74,11 @@ class Er_Cotizador_Admin {
 		wp_enqueue_style( "boostrap-min", plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), "4.5.3", 'all' );
 		wp_enqueue_style( "boostrap-grid-min", plugin_dir_url( __FILE__ ) . 'css/bootstrap-grid.min.css', array(), "4.5.3", 'all' );
 		wp_enqueue_style( "font-awesome", 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.css', array(), "4.4.0", 'all' );
-		if(get_current_screen()->base == "toplevel_page_er-cotizador"){
+		if(get_current_screen()->base == "toplevel_page_er-cotizador" || get_current_screen()->base == "cotizaciones_page_er-clientes" || get_current_screen()->base == "cotizaciones_page_er-productos"){
 			wp_enqueue_style( "DataTables-min", plugin_dir_url( __FILE__ ) . 'css/datatables.min.css', array('boostrap-min'), "1.10.22", 'all' );
 		}
-		if(get_current_screen()->base == "admin_page_er-cotizador-edit"){
-			wp_enqueue_style( "jquery.notyfy", plugin_dir_url( __FILE__ ) . 'css/jquery.notyfy.css', array(), $this->version, 'all' );
-			wp_enqueue_style( "jquery.notyfy-themes", plugin_dir_url( __FILE__ ) . 'css/jquery.notyfy-themes.default.css', array(), $this->version, 'all' );
-		}
+		wp_enqueue_style( "jquery.notyfy", plugin_dir_url( __FILE__ ) . 'css/jquery.notyfy.css', array(), $this->version, 'all' );
+		wp_enqueue_style( "jquery.notyfy-themes", plugin_dir_url( __FILE__ ) . 'css/jquery.notyfy-themes.default.css', array(), $this->version, 'all' );
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( "Select2", plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), "4.1.0", 'all' );
 		wp_enqueue_style( "select2-bootstrap-theme", plugin_dir_url( __FILE__ ) . 'css/select2-bootstrap.min.css', array(), "0.1.0", 'all' );
@@ -95,7 +93,7 @@ class Er_Cotizador_Admin {
 		wp_enqueue_script( "jquery-min", plugin_dir_url( __FILE__ ) . 'js/jquery-3.5.1.min.js', array( ), "3.5.1", false );
 		wp_enqueue_script( "bootstrap-min", plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array( 'jquery-min' ), "1.10.22", false );
 		wp_enqueue_script( "jquery.notyfy", plugin_dir_url( __FILE__ ) . 'js/jquery.notyfy.js', array( 'jquery-min' ), $this->version, false );
-		if(get_current_screen()->base == "toplevel_page_er-cotizador"){
+		if(get_current_screen()->base == "toplevel_page_er-cotizador" || get_current_screen()->base == "cotizaciones_page_er-clientes" || get_current_screen()->base == "cotizaciones_page_er-productos"){
 			wp_enqueue_script( "DataTables-min", plugin_dir_url( __FILE__ ) . 'js/datatables.min.js', array( 'jquery-min', 'bootstrap-min' ), "1.10.22", false );
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/er-cotizador-admin.js', array( 'jquery-min' ), $this->version, false );
 		}
@@ -129,19 +127,15 @@ class Er_Cotizador_Admin {
 			__( 'Clientes', 'er-cotizador' ), 
 			__( 'Clientes', 'er-cotizador' ),
 			'manage_options', 
-			'edit.php?post_type=er-clientes');
+			'er-clientes',
+			array( $this, 'home_clientes' ));
 		add_submenu_page(
 			'er-cotizador',
 			__( 'Productos', 'er-cotizador' ), 
 			__( 'Productos', 'er-cotizador' ),
 			'manage_options', 
-			'edit.php?post_type=er-productos');
-		add_submenu_page(
-			'er-cotizador',
-			__( 'Rubros', 'er-cotizador' ), 
-			__( 'Rubros', 'er-cotizador' ),
-			'manage_options', 
-			'edit-tags.php?taxonomy=rubro&post_type=er-productos');
+			'er-productos',
+			array( $this, 'home_productos' ));
 		add_submenu_page(
 			'edit.php?post_type=er-clientes',
 			__( 'Editar Cotizacion', 'er-cotizador' ), 
@@ -583,6 +577,28 @@ class Er_Cotizador_Admin {
 	public function home_page() {
 
 		include_once( 'partials/er-cotizador-admin-display.php' );
+
+	}
+
+	/**
+	 * Register the Menu for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function home_clientes() {
+
+		include_once( 'partials/er-cotizador-clientes-display.php' );
+
+	}
+
+	/**
+	 * Register the Menu for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function home_productos() {
+
+		include_once( 'partials/er-cotizador-productos-display.php' );
 
 	}
 

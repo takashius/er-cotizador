@@ -14,27 +14,18 @@
 
     global $wpdb;
     $prefix = $wpdb->prefix;
-    $sql_clientes = "SELECT `".$prefix."posts`.`ID`, 
-    `".$prefix."posts`.`post_title`, 
-    (SELECT `meta_value` FROM `".$prefix."postmeta` WHERE `".$prefix."postmeta`.`post_id` = `".$prefix."posts`.`ID` AND `".$prefix."postmeta`.`meta_key` = 'nombre') as 'nombre', 
-    (SELECT `meta_value` FROM `".$prefix."postmeta` WHERE `".$prefix."postmeta`.`post_id` = `".$prefix."posts`.`ID` AND `".$prefix."postmeta`.`meta_key` = 'apellido') as 'apellido', 
-    (SELECT `meta_value` FROM `".$prefix."postmeta` WHERE `".$prefix."postmeta`.`post_id` = `".$prefix."posts`.`ID` AND `".$prefix."postmeta`.`meta_key` = 'cedula-rif') as 'cedula-rif'
-    FROM `".$prefix."posts`
-    WHERE 
-        `post_type` = 'er-clientes' AND 
-        `post_status` = 'publish'
-    ORDER BY `post_title`";
+    $sql_clientes = "SELECT `ID`, `titulo`, `nombre`, `apellido` FROM `".$prefix."er_cotiza_clientes` WHERE `status` = 1";
     $query_clientes = $wpdb->prepare($sql_clientes);
     $clientes = $wpdb->get_results($query_clientes);
 
     $sql_cotizaciones = "SELECT 
 		`".$prefix."er_cotizaciones`.*, 
-		`".$prefix."posts`.`post_title` as 'title', 
-		(SELECT `meta_value` FROM `".$prefix."postmeta` WHERE `".$prefix."postmeta`.`post_id` = `".$prefix."posts`.`ID` AND `".$prefix."postmeta`.`meta_key` = 'cedula-rif') as 'cedulaRif'
+		`".$prefix."er_cotiza_clientes`.`titulo` as 'title', 
+		`".$prefix."er_cotiza_clientes`.`cedulaRif`
 	FROM 
-		`".$prefix."er_cotizaciones`, `".$prefix."posts` 
+		`".$prefix."er_cotizaciones`, `".$prefix."er_cotiza_clientes` 
 	WHERE 
-        `".$prefix."er_cotizaciones`.`cliente_id` = `".$prefix."posts`.`ID`";
+        `".$prefix."er_cotizaciones`.`cliente_id` = `".$prefix."er_cotiza_clientes`.`ID`";
     $query_cotizaciones = $wpdb->prepare($sql_cotizaciones);
     $cotizaciones = $wpdb->get_results($query_cotizaciones);
 ?>
@@ -153,7 +144,7 @@
                         <select class="form-control select2" id="newCotiza_cliente" name="state">
                             <?php
                             foreach($clientes as $cliente){
-                                echo '<option value="'.$cliente->ID.'">('.$cliente->post_title.') '.$cliente->nombre.' '.$cliente->apellido.'</option>';
+                                echo '<option value="'.$cliente->ID.'">('.$cliente->titulo.') '.$cliente->nombre.' '.$cliente->apellido.'</option>';
                             }
                             ?>
                         </select>

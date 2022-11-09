@@ -77,6 +77,84 @@ class Er_Cotizador_Ajax_Functions {
     
         wp_die();
 	}
+
+    function save_cliente() {
+        global $wpdb; 
+    
+        $id = $_POST['id'];
+        $titulo = $_POST['titulo'];
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+		$cedulaRif = $_POST['cedulaRif'];
+		$ciudad = $_POST['ciudad'];
+		$correo = $_POST['correo'];
+		$telefono = $_POST['telefono'];
+		$direccion = $_POST['direccion'];
+		$direccionCont = $_POST['direccionCont'];
+		
+		$array = array(
+			"titulo" => $titulo,
+			"nombre" => $nombre,
+			"apellido" => $apellido,
+			"cedulaRif" => $cedulaRif,
+			"ciudad" => $ciudad,
+			"correo" => $correo,
+			"telefono" => $telefono,
+			"direccion" => $direccion,
+			"direccionCont" => $direccionCont
+		);
+		
+		try{
+			if($id){
+				$where = array(
+					"ID" => $id
+				);
+				$wpdb->update( $wpdb->prefix."er_cotiza_clientes", $array, $where );
+				echo "ok";
+			}else{
+				$wpdb->insert( $wpdb->prefix."er_cotiza_clientes", $array );
+				$lastid = $wpdb->insert_id;
+				echo $lastid;
+			}
+		}catch(Exception $e){
+			echo $e;
+		}
+    
+        wp_die();
+	}
+
+    function save_producto() {
+        global $wpdb; 
+    
+        $id = $_POST['id'];
+        $titulo = $_POST['titulo'];
+        $precio = $_POST['precio'];
+        $iva = $_POST['iva'];
+		
+		$array = array(
+			"titulo" => $titulo,
+			"precio" => $precio,
+			"iva" => $iva
+		);
+		
+		try{
+			if($id){
+				$where = array(
+					"ID" => $id
+				);
+				$wpdb->update( $wpdb->prefix."er_productos", $array, $where );
+				echo "ok";
+			}else{
+				$wpdb->insert( $wpdb->prefix."er_productos", $array );
+				$lastid = $wpdb->insert_id;
+				echo $lastid;
+			}
+		}catch(Exception $e){
+			echo $e;
+		}
+    
+        wp_die();
+	}
 	
 	function edit_cotiza() {
         global $wpdb; 
@@ -134,6 +212,28 @@ class Er_Cotizador_Ajax_Functions {
 
 		$wpdb->delete($tablaCotizaProd, array( 'id_cotiza' => $id ));
 		$wpdb->delete($tablaCotiza, array( 'ID' => $id ));
+    
+        wp_die();
+	}
+
+	function delete_cliente(){
+		global $wpdb; 
+		$id = $_POST['id'];
+
+		$array = array( "status" => 0);
+		$where = array(	"ID" => $id);
+		$wpdb->update( $wpdb->prefix."er_cotiza_clientes", $array, $where );
+    
+        wp_die();
+	}
+
+	function delete_producto(){
+		global $wpdb; 
+		$id = $_POST['id'];
+
+		$array = array( "status" => 0);
+		$where = array(	"ID" => $id);
+		$wpdb->update( $wpdb->prefix."er_productos", $array, $where );
     
         wp_die();
 	}
@@ -239,7 +339,11 @@ class Er_Cotizador_Ajax_Functions {
 		if($presupuesto == 'true'){
             $pdf->presupuesto();
         }else if($fiscal  == 'false'){
-            $pdf->fiscal($cotiza->factura);
+            if($cotiza->factura > 0){
+                $pdf->fiscal($cotiza->factura);
+            }else{
+                $pdf->nota();
+            }
         }
 		
 		$pdf->SetFont('Arial','',8);
@@ -251,7 +355,7 @@ class Er_Cotizador_Ajax_Functions {
 		$pdf->Line(11, 64.4, 134, 64.4);
 		$pdf->Line(60, 58.2, 60, 64.4); //linea vertical rif-lugar
 		$pdf->SetXY(60, 59); $pdf->Cell(60,5,utf8_decode('Lugar y Fecha de Emisión: '.$cotiza->fechafactura));
-	//	$pdf->SetXY(60, 59); $pdf->Cell(60,5,utf8_decode('Lugar y Fecha de Emisión: Caracas 28/12/2020'));
+		//	$pdf->SetXY(60, 59); $pdf->Cell(60,5,utf8_decode('Lugar y Fecha de Emisión: Caracas 28/12/2020'));
 		$pdf->Line(11, 70.6, 134, 70.6);
 		$pdf->SetXY(13, 65); $pdf->Cell(60,5,utf8_decode('Dirección Fiscal: '.$cotiza->direccion));
 		$pdf->SetXY(13, 71); $pdf->Cell(60,5,$cotiza->direccionCont); //linea 2 de la direccion
@@ -328,6 +432,10 @@ class Er_Cotizador_Ajax_Functions {
 		if($presupuesto  == 'false' && $fiscal  == 'false'){
 			$pdf->SetFont('Arial','',8);
 			$pdf->SetXY(13, 265); $pdf->Cell(29,5,utf8_decode('ESTA FACTURA VA SIN TACHADURA NI ENMIENDAS'),0,0,'l');
+			$pdf->SetFont('Arial','',7);
+			$pdf->SetXY(95, 265); $pdf->Cell(29,5,utf8_decode('A los efectos de lo previsto en el Art. 25 de la Ley de Impuesto al valor agregado se expresa '),0,0,'l');
+			$pdf->SetXY(95, 268); $pdf->Cell(29,5,utf8_decode('los montos de la factura en Dólares ($) considerando la tasa de cambio corriente establecida '),0,0,'l');
+			$pdf->SetXY(95, 271); $pdf->Cell(29,5,utf8_decode('en el BCV a la fecha '.$cotiza->fechafactura.' asimismo esta expresada en Bs a la tasa '.number_format($cotiza->tasa, 2, ',', '.')),0,0,'l');
 			$pdf->SetFont('Arial','B',10);
 			$pdf->SetXY(13, 270); $pdf->Cell(29,5,utf8_decode('ORIGINAL'),0,0,'L');
 		}
@@ -409,6 +517,6 @@ class Er_Cotizador_Ajax_Functions {
 		
         $headers[] = 'Bcc: '.$correoCopia;
 		
-		wp_mail($cotiza->correo, "Cotizacion en ".$options['er_shortname'], $correo, $headers);
+		wp_mail($cotiza->correo, "Cotizacion en ".$options['er_name'], $correo, $headers);
 	}
 }

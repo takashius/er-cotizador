@@ -31,10 +31,10 @@ class Er_Cotizador_Deactivator {
 	 */
 	public static function deactivate() {
 		global $wpdb;
-		$sql = 'DROP TABLE '.$wpdb->prefix.'er_cotizaciones;';
-		$wpdb->get_results($sql);
-		$sql = 'DROP TABLE '.$wpdb->prefix.'er_cotiza_prods;';
-		$wpdb->get_results($sql);
+		// $sql = 'DROP TABLE '.$wpdb->prefix.'er_cotizaciones;';
+		// $wpdb->get_results($sql);
+		// $sql = 'DROP TABLE '.$wpdb->prefix.'er_cotiza_prods;';
+		// $wpdb->get_results($sql);
 	}
 
 }
